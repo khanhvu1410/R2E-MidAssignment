@@ -1,0 +1,57 @@
+# Build artifacts
+bin/
+obj/
+
+# Visual Studio Code settings
+.vscode/
+
+# Visual Studio settings
+.vs/
+
+# Rider project settings
+.idea/
+
+# User-specific files
+*.user
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# NuGet Packages
+packages/
+*.nupkg
+project.lock.json
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+
+# Compiled DLL and EXE files
+*.dll
+*.exe
+
+# Temporary files
+*.tmp
+*.cache
+*.pdb
+
+# Resharper files
+*.DotSettings.user
+
+# Debug and Release folders
+Debug/
+Release/
+
+# JetBrains Rider settings
+*.sln.iml
+
+# Thumbs.db and desktop.ini (Windows)
+Thumbs.db
+desktop.ini
+
+# OS-specific files
+.DS_Store

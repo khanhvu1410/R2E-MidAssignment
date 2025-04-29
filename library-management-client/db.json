@@ -1,0 +1,103 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "publishedDate": "1925-04-10",
+      "description": "A story of wealth, love, and the American Dream in the 1920s.",
+      "status": "available",
+      "category": "Classic"
+    },
+    {
+      "id": "2",
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "publishedDate": "1960-07-11",
+      "description": "A powerful story of racial injustice and moral growth in the American South.",
+      "status": "checked out",
+      "category": "Literary Fiction"
+    },
+    {
+      "id": "3",
+      "title": "1984",
+      "author": "George Orwell",
+      "publishedDate": "1949-06-08",
+      "description": "A dystopian novel about totalitarianism, surveillance, and thought control.",
+      "status": "available",
+      "category": "Dystopian"
+    },
+    {
+      "id": "4",
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "publishedDate": "1813-01-28",
+      "description": "A romantic novel about the turbulent relationship between Elizabeth Bennet and Mr. Darcy.",
+      "status": "checked out",
+      "category": "Romance"
+    },
+    {
+      "id": "5",
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "publishedDate": "1937-09-21",
+      "description": "A fantasy adventure about Bilbo Baggins and his quest to reclaim treasure guarded by a dragon.",
+      "status": "available",
+      "category": "Fantasy"
+    },
+    {
+      "id": "6",
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "publishedDate": "1951-07-16",
+      "description": "A novel about teenage rebellion and alienation.",
+      "status": "available",
+      "category": "Coming-of-Age"
+    },
+    {
+      "id": "7",
+      "title": "Moby Dick",
+      "author": "Herman Melville",
+      "publishedDate": "1851-10-18",
+      "description": "The story of Captain Ahab's obsessive quest to hunt the white whale.",
+      "status": "checked out",
+      "category": "Adventure"
+    },
+    {
+      "id": "8",
+      "title": "The Lord of the Rings",
+      "author": "J.R.R. Tolkien",
+      "publishedDate": "1954-07-29",
+      "description": "An epic fantasy trilogy about the quest to destroy the One Ring.",
+      "status": "available",
+      "category": "Fantasy"
+    },
+    {
+      "id": "9",
+      "title": "Brave New World",
+      "author": "Aldous Huxley",
+      "publishedDate": "1932-01-01",
+      "description": "A dystopian novel about a futuristic society controlled by technology.",
+      "status": "checked out",
+      "category": "Science Fiction"
+    },
+    {
+      "id": "10",
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "publishedDate": "1988-01-01",
+      "description": "A philosophical novel about a shepherd's journey to find treasure.",
+      "status": "available",
+      "category": "Philosophical Fiction"
+    },
+    {
+      "id": "32e1",
+      "title": "test",
+      "author": "test",
+      "publishedDate": "2025-04-29T17:00:00.000Z",
+      "description": "test",
+      "category": "test",
+      "status": "checked"
+    }
+  ]
+}
