@@ -4,7 +4,7 @@ namespace LibraryManagement.Application.Interfaces
 {
     public interface IBookBorrowingRequestService
     {
-        public Task<BorrowingRequestDTO> AddBookBorrowingRequestAsync(IEnumerable<RequestDetailsDTO> bookBorrowingRequestDetailsDTOs);
+        public Task<BorrowingRequestDTO> AddBookBorrowingRequestAsync(IEnumerable<RequestDetailsToAddDTO> bookBorrowingRequestDetailsDTOs);
 
         public Task<IEnumerable<BorrowingRequestDTO>> GetAllBookBorrowingRequestsAsync();
 

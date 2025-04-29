@@ -5,9 +5,9 @@ namespace LibraryManagement.Application.Mappers
 {
     internal static class BookBorrowingRequestDetailsMapper
     {
-        public static RequestDetailsDTO ToBookBorrowingRequestDetailsDTO(this BookBorrowingRequestDetails bookBorrowingRequestDetails)
+        public static RequestDetailsToAddDTO ToBookBorrowingRequestDetailsDTO(this BookBorrowingRequestDetails bookBorrowingRequestDetails)
         {
-            return new RequestDetailsDTO
+            return new RequestDetailsToAddDTO
             {
                 BookId = bookBorrowingRequestDetails.BookId,
             };

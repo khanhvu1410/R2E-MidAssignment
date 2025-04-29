@@ -4,9 +4,9 @@ namespace LibraryManagement.Domain.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync();
-
         Task<T?> GetByIdAsync(int id);
+
+        Task<IPagedResult<T>> GetPagedAsync(int pageIndex, int pageSize);
 
         Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<int> ids);
 
@@ -17,5 +17,7 @@ namespace LibraryManagement.Domain.Interfaces
         Task DeleteAsync(int id);
 
         Task<IDbContextTransaction> BeginTransactionAsync();
+
+        IQueryable<T> GetQueryable();
     }
 }

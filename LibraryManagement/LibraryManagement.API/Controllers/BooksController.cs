@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.Common;
+using LibraryManagement.Application.DTOs;
 using LibraryManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,10 +24,10 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDTO>>> GetAllBooks()
+        public async Task<ActionResult<PagedResponse<BookDTO>>> GetBooks(int pageIndex, int pageSize)
         {
-            var books = await _bookService.GetAllBooksAsync();
-            return Ok(books);
+            var pagedResponse = await _bookService.GetBooksPaginatedAsync(pageIndex, pageSize);
+            return Ok(pagedResponse);
         }
 
         [HttpGet("{id}")]

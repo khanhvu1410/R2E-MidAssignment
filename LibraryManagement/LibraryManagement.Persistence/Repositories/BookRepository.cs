@@ -10,9 +10,10 @@ namespace LibraryManagement.Persistence.Repositories
         {
         }
 
-        public new async Task<IEnumerable<Book>> GetByIdsAsync(IEnumerable<int> ids)
+        public override async Task<IEnumerable<Book>> GetByIdsAsync(IEnumerable<int> ids)
         {
-            return await _context.Books
+            var query = GetQueryable();
+            return await query
                 .Where(b => ids.Contains(b.Id))
                 .AsNoTracking()
                 .ToListAsync();

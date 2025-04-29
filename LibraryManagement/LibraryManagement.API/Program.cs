@@ -32,6 +32,7 @@ namespace LibraryManagement.API
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IBookBorrowingRequestService, BookBorrowingRequestService>();
+            builder.Services.AddScoped<IBookBorrowingRequestDetailsService, BookBorrowingRequestDetailsService>();
 
             builder.Services.AddScoped<IValidator<BookDTO>, BookDTOValidator>();
             builder.Services.AddScoped<IValidator<BookToAddDTO>, BookToAddDTOValidator>();

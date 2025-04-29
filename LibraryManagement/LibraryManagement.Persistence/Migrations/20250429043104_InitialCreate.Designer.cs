@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Persistence.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    [Migration("20250428180807_InitialCreate")]
+    [Migration("20250429043104_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -214,6 +214,9 @@ namespace LibraryManagement.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.HasKey("BookBorrowingRequestId", "BookId");
