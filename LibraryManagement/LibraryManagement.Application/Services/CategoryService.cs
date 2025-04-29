@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
+using LibraryManagement.Application.Common;
 using LibraryManagement.Application.DTOs;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Application.Mappers;
 using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Exceptions;
 using LibraryManagement.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Application.Services
 {
@@ -46,7 +48,7 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if a book belongs to this category
-            var books = await _bookRepository.GetAllAsync();
+            var books = _bookRepository.GetQueryable();
             var booksByCategoryId = books.Where(b => b.CategoryId == id);
             if (booksByCategoryId.Any())
             {
@@ -56,10 +58,18 @@ namespace LibraryManagement.Application.Services
             await _categoryRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync()
+        public async Task<PagedResponse<CategoryDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize)
         {
-            var categories = await _categoryRepository.GetAllAsync();
-            return categories.Select(c => c.ToCategoryDTO()).ToList();
+            var pagedResult = await _categoryRepository.GetPagedAsync(pageIndex, pageSize);
+            var pagedResponse = new PagedResponse<CategoryDTO>
+            {
+                Items = pagedResult.Items?.Select(c => c.ToCategoryDTO()).ToList(),
+                PageIndex = pagedResult.PageIndex,
+                TotalPages = pagedResult.TotalPages,
+                HasPreviousPage = pagedResult.HasPreviousPage,
+                HasNextPage = pagedResult.HasNextPage,
+            };
+            return pagedResponse;
         }
 
         public async Task<CategoryDTO> GetCategoryByIdAsync(int id)

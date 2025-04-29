@@ -5,6 +5,7 @@ using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Enums;
 using LibraryManagement.Domain.Exceptions;
 using LibraryManagement.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Application.Services
 {
@@ -23,7 +24,7 @@ namespace LibraryManagement.Application.Services
             _bookRepository = bookRepository;
         }
 
-        public async Task<BorrowingRequestDTO> AddBookBorrowingRequestAsync(IEnumerable<RequestDetailsDTO> requestDetailsDTOs)
+        public async Task<BorrowingRequestDTO> AddBookBorrowingRequestAsync(IEnumerable<RequestDetailsToAddDTO> requestDetailsDTOs)
         {
             using var transaction = await _bookBorrowingRequestRepository.BeginTransactionAsync();
             try
@@ -96,8 +97,8 @@ namespace LibraryManagement.Application.Services
 
         public async Task<IEnumerable<BorrowingRequestDTO>> GetAllBookBorrowingRequestsAsync()
         {
-            var bookBorrowingRequests = await _bookBorrowingRequestRepository.GetAllAsync();
-            return bookBorrowingRequests.Select(bbr => bbr.ToBookBorrowingRequestDTO());
+            var query = _bookBorrowingRequestRepository.GetQueryable();
+            return await query.Select(bbr => bbr.ToBookBorrowingRequestDTO()).ToListAsync();
         }
 
         public async Task<BorrowingRequestDTO> GetBookBorrowingRequestByIdAsync(int id)

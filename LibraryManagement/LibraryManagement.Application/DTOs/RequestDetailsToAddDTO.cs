@@ -1,6 +1,6 @@
 ﻿namespace LibraryManagement.Application.DTOs
 {
-    public class RequestDetailsDTO
+    public class RequestDetailsToAddDTO
     {
         public int BookId { get; set; }
     }

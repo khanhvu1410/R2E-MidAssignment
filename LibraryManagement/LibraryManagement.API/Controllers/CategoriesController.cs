@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.Common;
+using LibraryManagement.Application.DTOs;
 using LibraryManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,10 +24,10 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetAllCategories()
+        public async Task<ActionResult<PagedResponse<CategoryDTO>>> GetCatgories(int pageIndex, int pageSize)
         {
-            var categories = await _categoryService.GetAllCategoriesAsync();
-            return Ok(categories);
+            var pagedResponse = await _categoryService.GetCategoriesPaginatedAsync(pageIndex, pageSize);
+            return Ok(pagedResponse);
         }
 
         [HttpGet("{id}")]

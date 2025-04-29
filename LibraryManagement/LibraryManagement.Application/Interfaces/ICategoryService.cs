@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.Common;
+using LibraryManagement.Application.DTOs;
 
 namespace LibraryManagement.Application.Interfaces
 {
@@ -6,9 +7,9 @@ namespace LibraryManagement.Application.Interfaces
     {
         public Task<CategoryDTO> AddCategoryAsync(CategoryToAddDTO categoryToAddDTO);
 
-        public Task<IEnumerable<CategoryDTO>> GetAllCategoriesAsync();
-
         public Task<CategoryDTO> GetCategoryByIdAsync(int id);
+
+        public Task<PagedResponse<CategoryDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize);
 
         public Task<CategoryDTO> UpdateCategoryAsync(CategoryDTO categoryDTO);
 

@@ -1,4 +1,5 @@
 ﻿using LibraryManagement.Domain.Interfaces;
+using LibraryManagement.Persistence.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -32,11 +33,6 @@ namespace LibraryManagement.Persistence.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await _dbSet.ToListAsync();
-        }
-
         public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
@@ -54,9 +50,28 @@ namespace LibraryManagement.Persistence.Repositories
             return await _context.Database.BeginTransactionAsync();
         }
 
-        public Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<int> ids)
+        public IQueryable<T> GetQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
+
+        public virtual Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<int> ids)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IPagedResult<T>> GetPagedAsync(int pageIndex, int pageSize)
+        {
+            var query = GetQueryable();
+            var items = await query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var count = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(count / (double)pageSize);
+            
+            return new PagedResult<T>(items, pageIndex, totalPages);
         }
     }
 }

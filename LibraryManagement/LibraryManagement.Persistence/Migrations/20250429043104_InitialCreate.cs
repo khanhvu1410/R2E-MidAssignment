@@ -100,7 +100,8 @@ namespace LibraryManagement.Persistence.Migrations
                 columns: table => new
                 {
                     BookBorrowingRequestId = table.Column<int>(type: "int", nullable: false),
-                    BookId = table.Column<int>(type: "int", nullable: false)
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -213,6 +213,9 @@ namespace LibraryManagement.Persistence.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.HasKey("BookBorrowingRequestId", "BookId");
 
                     b.HasIndex("BookId");

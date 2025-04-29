@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using LibraryManagement.Application.Common;
 using LibraryManagement.Application.DTOs;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Application.Mappers;
@@ -46,8 +47,8 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if this book is being borrowed
-            var requestDetails = await _bookBorrowingRequestDetails.GetAllAsync();
-            var requestDetailsByBookId = requestDetails.Where(rd => rd.BookId == book.Id);
+            var query = _bookBorrowingRequestDetails.GetQueryable();
+            var requestDetailsByBookId = query.Where(rd => rd.BookId == book.Id);
             if (requestDetailsByBookId.Any())
             {
                 throw new BadRequestException($"Book with ID {id} cannot be deleted.");
@@ -56,10 +57,18 @@ namespace LibraryManagement.Application.Services
             await _bookRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<BookDTO>> GetAllBooksAsync()
+        public async Task<PagedResponse<BookDTO>> GetBooksPaginatedAsync(int pageIndex, int pageSize)
         {
-            var books = await _bookRepository.GetAllAsync();
-            return books.Select(b => b.ToBookDTO()).ToList();
+            var pageResult = await _bookRepository.GetPagedAsync(pageIndex, pageSize);
+            var pageResponse = new PagedResponse<BookDTO>
+            {
+                Items = pageResult.Items?.Select(b => b.ToBookDTO()).ToList(),
+                PageIndex = pageResult.PageIndex,
+                TotalPages = pageResult.TotalPages,
+                HasPreviousPage = pageResult.HasPreviousPage,
+                HasNextPage = pageResult.HasNextPage,
+            };
+            return pageResponse;
         }
 
         public async Task<BookDTO> GetBookByIdAsync(int id)
@@ -71,7 +80,6 @@ namespace LibraryManagement.Application.Services
             } 
             return book.ToBookDTO();
         }
-
         public async Task<BookDTO> UpdateBookAsync(BookDTO bookDTO)
         {
             var result = await _bookDTOValidator.ValidateAsync(bookDTO);

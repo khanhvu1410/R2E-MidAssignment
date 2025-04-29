@@ -16,7 +16,7 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BorrowingRequestDTO>> CreateBookBorrowingRequest(IEnumerable<RequestDetailsDTO> bookBorrowingRequestDetailsDTOs)
+        public async Task<ActionResult<BorrowingRequestDTO>> CreateBookBorrowingRequest(IEnumerable<RequestDetailsToAddDTO> bookBorrowingRequestDetailsDTOs)
         {
             var addedBookBorrowingRequest = await _bookBorrowingRequestService.AddBookBorrowingRequestAsync(bookBorrowingRequestDetailsDTOs);
             return CreatedAtAction(nameof(GetBookBorrowingRequestById), new { id =  addedBookBorrowingRequest.Id }, addedBookBorrowingRequest);
