@@ -1,15 +1,16 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.DTOs.BorrowingRequest;
+using LibraryManagement.Application.DTOs.RequestDetails;
 
 namespace LibraryManagement.Application.Interfaces
 {
     public interface IBookBorrowingRequestService
     {
-        public Task<BorrowingRequestDTO> AddBookBorrowingRequestAsync(IEnumerable<RequestDetailsToAddDTO> bookBorrowingRequestDetailsDTOs);
+        public Task<BorrowingRequestToReturnDTO> AddBookBorrowingRequestAsync(IEnumerable<RequestDetailsToAddDTO> bookBorrowingRequestDetailsDTOs);
 
-        public Task<IEnumerable<BorrowingRequestDTO>> GetAllBookBorrowingRequestsAsync();
+        public Task<IEnumerable<BorrowingRequestToReturnDTO>> GetAllBookBorrowingRequestsAsync();
 
-        public Task<BorrowingRequestDTO> GetBookBorrowingRequestByIdAsync(int id);
+        public Task<BorrowingRequestToReturnDTO> GetBookBorrowingRequestByIdAsync(int id);
 
-        public Task<BorrowingRequestDTO> UpdateBookBorrowingRequestAsync(BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO);
+        public Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int id, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO);
     }
 }

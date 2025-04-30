@@ -1,11 +1,7 @@
-﻿using LibraryManagement.Domain.Enums;
-
-namespace LibraryManagement.Application.DTOs
+﻿namespace LibraryManagement.Application.DTOs.Book
 {
-    public class BookDTO
+    public class BookToUpdateDTO
     {
-        public int Id { get; set; }
-
         public string? Title { get; set; }
 
         public string? Author { get; set; }

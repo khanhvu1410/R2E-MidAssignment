@@ -1,17 +1,17 @@
 ﻿using LibraryManagement.Application.Common;
-using LibraryManagement.Application.DTOs;
+using LibraryManagement.Application.DTOs.Category;
 
 namespace LibraryManagement.Application.Interfaces
 {
     public interface ICategoryService
     {
-        public Task<CategoryDTO> AddCategoryAsync(CategoryToAddDTO categoryToAddDTO);
+        public Task<CategoryToReturnDTO> AddCategoryAsync(CategoryToAddDTO categoryToAddDTO);
 
-        public Task<CategoryDTO> GetCategoryByIdAsync(int id);
+        public Task<CategoryToReturnDTO> GetCategoryByIdAsync(int id);
 
-        public Task<PagedResponse<CategoryDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize);
+        public Task<PagedResponse<CategoryToReturnDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize);
 
-        public Task<CategoryDTO> UpdateCategoryAsync(CategoryDTO categoryDTO);
+        public Task<CategoryToReturnDTO> UpdateCategoryAsync(int id, CategoryToUpdateDTO categoryToUpdateDTO);
 
         public Task DeleteCategoryAsync(int id);
     }

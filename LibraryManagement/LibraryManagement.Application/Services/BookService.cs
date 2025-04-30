@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using LibraryManagement.Application.Common;
-using LibraryManagement.Application.DTOs;
+using LibraryManagement.Application.DTOs.Book;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Application.Mappers;
 using LibraryManagement.Domain.Entities;
@@ -14,20 +14,21 @@ namespace LibraryManagement.Application.Services
         private readonly IGenericRepository<Book> _bookRepository;
         private readonly IGenericRepository<BookBorrowingRequestDetails> _bookBorrowingRequestDetails;
         private readonly IValidator<BookToAddDTO> _bookToAddDTOValidator;
-        private readonly IValidator<BookDTO> _bookDTOValidator;
+        private readonly IValidator<BookToUpdateDTO> _bookToUpdateDTOValidator;
 
-        public BookService(IGenericRepository<Book> bookRepository, 
+        public BookService(IGenericRepository<Book> bookRepository,
+            IGenericRepository<BookBorrowingRequestDetails> bookBorrowingRequestDetails,
             IValidator<BookToAddDTO> bookToAddDTOvalidator, 
-            IValidator<BookDTO> bookDTOValidator,
-            IGenericRepository<BookBorrowingRequestDetails> bookBorrowingRequestDetails)
+            IValidator<BookToUpdateDTO> bookToUpdateDTOValidator
+        )
         {
             _bookRepository = bookRepository;
             _bookBorrowingRequestDetails = bookBorrowingRequestDetails;
             _bookToAddDTOValidator = bookToAddDTOvalidator;
-            _bookDTOValidator = bookDTOValidator;
+            _bookToUpdateDTOValidator = bookToUpdateDTOValidator;
         }
 
-        public async Task<BookDTO> AddBookAsync(BookToAddDTO bookToAddDTO)
+        public async Task<BookToReturnDTO> AddBookAsync(BookToAddDTO bookToAddDTO)
         {
             var result = await _bookToAddDTOValidator.ValidateAsync(bookToAddDTO);
             if (!result.IsValid)
@@ -35,7 +36,7 @@ namespace LibraryManagement.Application.Services
                 throw new ValidationException(result.Errors);
             }
             var addedBook = await _bookRepository.AddAsync(bookToAddDTO.ToBook());
-            return addedBook.ToBookDTO();
+            return addedBook.ToBookToReturnDTO();
         }
 
         public async Task DeleteBookAsync(int id)
@@ -47,8 +48,8 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if this book is being borrowed
-            var query = _bookBorrowingRequestDetails.GetQueryable();
-            var requestDetailsByBookId = query.Where(rd => rd.BookId == book.Id);
+            var requestDetails = await _bookBorrowingRequestDetails.GetAllAsync();
+            var requestDetailsByBookId = requestDetails.Where(rd => rd.BookId == book.Id);
             if (requestDetailsByBookId.Any())
             {
                 throw new BadRequestException($"Book with ID {id} cannot be deleted.");
@@ -57,43 +58,54 @@ namespace LibraryManagement.Application.Services
             await _bookRepository.DeleteAsync(id);
         }
 
-        public async Task<PagedResponse<BookDTO>> GetBooksPaginatedAsync(int pageIndex, int pageSize)
+        public async Task<PagedResponse<BookToReturnDTO>> GetBooksPaginatedAsync(int pageIndex, int pageSize)
         {
-            var pageResult = await _bookRepository.GetPagedAsync(pageIndex, pageSize);
-            var pageResponse = new PagedResponse<BookDTO>
+            var pagedResult = await _bookRepository.GetPagedAsync(pageIndex, pageSize);
+            var pagedResponse = new PagedResponse<BookToReturnDTO>
             {
-                Items = pageResult.Items?.Select(b => b.ToBookDTO()).ToList(),
-                PageIndex = pageResult.PageIndex,
-                TotalPages = pageResult.TotalPages,
-                HasPreviousPage = pageResult.HasPreviousPage,
-                HasNextPage = pageResult.HasNextPage,
+                Items = pagedResult.Items?.Select(b => b.ToBookToReturnDTO()).ToList(),
+                PageIndex = pagedResult.PageIndex,
+                PageSize = pagedResult.PageSize,
+                TotalRecords = pagedResult.TotalRecords,
+                TotalPages = pagedResult.TotalPages,
+                HasPreviousPage = pagedResult.HasPreviousPage,
+                HasNextPage = pagedResult.HasNextPage,
             };
-            return pageResponse;
+            return pagedResponse;
         }
 
-        public async Task<BookDTO> GetBookByIdAsync(int id)
+        public async Task<BookToReturnDTO> GetBookByIdAsync(int id)
         {
             var book = await _bookRepository.GetByIdAsync(id);
             if (book == null)
             {
                 throw new NotFoundException($"Book with ID {id} not found.");
             } 
-            return book.ToBookDTO();
+            return book.ToBookToReturnDTO();
         }
-        public async Task<BookDTO> UpdateBookAsync(BookDTO bookDTO)
+        public async Task<BookToReturnDTO> UpdateBookAsync(int id, BookToUpdateDTO bookToUpdateDTO)
         {
-            var result = await _bookDTOValidator.ValidateAsync(bookDTO);
+            var result = await _bookToUpdateDTOValidator.ValidateAsync(bookToUpdateDTO);
             if (!result.IsValid)
             {
                 throw new ValidationException(result.Errors);
             }
-            var book = await _bookRepository.GetByIdAsync(bookDTO.Id);
+            var book = await _bookRepository.GetByIdAsync(id);
             if (book == null)
             {
-                throw new NotFoundException($"Book with ID {bookDTO.Id} not found.");
+                throw new NotFoundException($"Book with ID {id} not found.");
             }
+
+            book.Title = bookToUpdateDTO.Title;
+            book.Author = bookToUpdateDTO.Author;            
+            book.ISBN = bookToUpdateDTO.ISBN;           
+            book.PublicationYear = bookToUpdateDTO.PublicationYear;
+            book.Description = bookToUpdateDTO.Description;
+            book.Quantity = bookToUpdateDTO.Quantity;
+            book.CategoryId = bookToUpdateDTO.CategoryId;
+
             var updatedBook = await _bookRepository.UpdateAsync(book);
-            return updatedBook.ToBookDTO();
+            return updatedBook.ToBookToReturnDTO();
         }
     }
 }

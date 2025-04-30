@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Persistence.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    [Migration("20250429043104_InitialCreate")]
+    [Migration("20250430103009_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -282,9 +282,13 @@ namespace LibraryManagement.Persistence.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<byte[]>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
@@ -296,24 +300,6 @@ namespace LibraryManagement.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "admin123@gmail.com",
-                            Password = "123",
-                            Role = 1,
-                            Username = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "user123@gmail.com",
-                            Password = "123",
-                            Role = 0,
-                            Username = "user"
-                        });
                 });
 
             modelBuilder.Entity("LibraryManagement.Domain.Entities.Book", b =>

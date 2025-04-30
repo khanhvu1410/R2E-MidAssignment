@@ -33,7 +33,8 @@ namespace LibraryManagement.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Role = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -130,15 +131,6 @@ namespace LibraryManagement.Persistence.Migrations
                     { 3, "History" },
                     { 4, "Biography" },
                     { 5, "Children" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Email", "Password", "Role", "Username" },
-                values: new object[,]
-                {
-                    { 1, "admin123@gmail.com", "123", 1, "admin" },
-                    { 2, "user123@gmail.com", "123", 0, "user" }
                 });
 
             migrationBuilder.InsertData(

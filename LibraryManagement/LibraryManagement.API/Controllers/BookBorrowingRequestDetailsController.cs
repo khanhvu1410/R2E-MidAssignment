@@ -1,11 +1,13 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class BookBorrowingRequestDetailsController : ControllerBase
     {
         private readonly IBookBorrowingRequestDetailsService _bookBorrowingRequestDetailsService;

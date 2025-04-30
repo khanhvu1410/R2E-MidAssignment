@@ -59,6 +59,13 @@ namespace LibraryManagement.API.Middlewares
                     problemDetails.Detail = exception.Message;
                     break;
 
+                case UnauthorizedException:
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    problemDetails.Title = "Unauthorized";
+                    problemDetails.Status = StatusCodes.Status401Unauthorized;
+                    problemDetails.Detail = exception.Message;
+                    break;
+
                 default:
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                     problemDetails.Title = "An unexpected error occured";

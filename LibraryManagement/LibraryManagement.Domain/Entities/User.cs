@@ -8,9 +8,11 @@ namespace LibraryManagement.Domain.Entities
 
         public string? Username { get; set; }
 
-        public string? Password { get; set; }    
+        public required byte[] PasswordHash { get; set; }
+        
+        public required byte[] PasswordSalt { get; set; }
 
-        public UserRole Role {  get; set; }
+        public UserRole Role { get; set; }
 
         public string? Email { get; set; }
 

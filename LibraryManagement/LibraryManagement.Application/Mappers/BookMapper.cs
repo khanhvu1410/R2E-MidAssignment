@@ -1,13 +1,13 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.DTOs.Book;
 using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers
 {
     internal static class BookMapper
     {
-        public static BookDTO ToBookDTO(this Book book)
+        public static BookToReturnDTO ToBookToReturnDTO(this Book book)
         {
-            return new BookDTO
+            return new BookToReturnDTO
             {
                 Id = book.Id,
                 Title = book.Title,
@@ -20,20 +20,6 @@ namespace LibraryManagement.Application.Mappers
             };
         }
 
-        public static Book ToBook(this BookDTO bookDTO)
-        {
-            return new Book
-            {
-                Id = bookDTO.Id,
-                Title = bookDTO.Title,
-                Author = bookDTO.Author,
-                ISBN = bookDTO.ISBN,
-                PublicationYear = bookDTO.PublicationYear,
-                Description = bookDTO.Description,
-                Quantity = bookDTO.Quantity,
-                CategoryId = bookDTO.CategoryId,
-            };
-        }
         public static Book ToBook(this BookToAddDTO bookToAddDTO)
         {
             return new Book

@@ -1,4 +1,4 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers

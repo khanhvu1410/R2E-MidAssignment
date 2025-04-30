@@ -1,25 +1,16 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.DTOs.Category;
 using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers
 {
     internal static class CategoryMapper
     {
-        public static CategoryDTO ToCategoryDTO(this Category category)
+        public static CategoryToReturnDTO ToCategoryToReturnDTO(this Category category)
         {
-            return new CategoryDTO
+            return new CategoryToReturnDTO
             {
                 Id = category.Id,
                 Name = category.Name,
-            };
-        }
-
-        public static Category ToCategory(this CategoryDTO categoryDTO)
-        {
-            return new Category
-            {
-                Id = categoryDTO.Id,
-                Name = categoryDTO.Name,
             };
         }
 
