@@ -1,4 +1,4 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Interfaces;
@@ -17,16 +17,15 @@ namespace LibraryManagement.Application.Services
 
         public async Task<IEnumerable<RequestDetailsToReturnDTO>> GetRequestDetailsByBorrowingRequestId(int borrowingRequetsId)
         {
-            var query = _requestDetailsRepository.GetQueryable();
-            return await query
+            var requestDetails = await _requestDetailsRepository.GetAllAsync(rd => rd.Book);
+            return requestDetails
                 .Where(rd => rd.BookBorrowingRequestId == borrowingRequetsId)
-                .Include(rd => rd.Book)
                 .Select(rd => new RequestDetailsToReturnDTO
                 {
                     BookId = rd.BookId,
                     BookName = rd.Book != null ? rd.Book.Title : string.Empty,
                     BookQuantity = rd.Book != null ? rd.Book.Quantity : 0
-                }).ToListAsync();
+                });
         }
     }
 }

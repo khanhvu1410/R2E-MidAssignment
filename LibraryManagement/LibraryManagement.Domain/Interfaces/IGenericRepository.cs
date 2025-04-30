@@ -1,14 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using System.Linq.Expressions;
+using LibraryManagement.Domain.Models;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace LibraryManagement.Domain.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<T?> GetByIdAsync(int id);
+        Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);
 
-        Task<IPagedResult<T>> GetPagedAsync(int pageIndex, int pageSize);
+        Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
+
+        Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize);
 
         Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<int> ids);
+
+        Task<IEnumerable<T>> GetFiltersAsync(params Expression<Func<T, bool>>[] filters);
+
+        Task<T?> GetAsync(Expression<Func<T, bool>> expression);
 
         Task<T> AddAsync(T entity);
 
@@ -17,7 +25,5 @@ namespace LibraryManagement.Domain.Interfaces
         Task DeleteAsync(int id);
 
         Task<IDbContextTransaction> BeginTransactionAsync();
-
-        IQueryable<T> GetQueryable();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace LibraryManagement.Application.DTOs
+﻿namespace LibraryManagement.Application.DTOs.RequestDetails
 {
     public class RequestDetailsToReturnDTO
     {

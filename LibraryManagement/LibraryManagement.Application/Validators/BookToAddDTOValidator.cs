@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using LibraryManagement.Application.DTOs;
+using LibraryManagement.Application.DTOs.Book;
 
 namespace LibraryManagement.Application.Validators
 {
@@ -14,8 +14,7 @@ namespace LibraryManagement.Application.Validators
 
             RuleFor(b => b.Author)
                 .NotEmpty().WithMessage("Author name is required.")
-                .MaximumLength(100).WithMessage("Author name cannot exceed 100 characters")
-                .Matches(@"^[\p{L}\s'-]+$").WithMessage("Author name contains invalid characters.");
+                .MaximumLength(100).WithMessage("Author name cannot exceed 100 characters");
 
             RuleFor(b => b.ISBN)
                 .Length(10, 13).WithMessage("ISBN must be 10 or 13 characters")
@@ -27,10 +26,10 @@ namespace LibraryManagement.Application.Validators
                 .WithMessage($"Publication year must be between 1800 and {DateTime.UtcNow.Year}.");
 
             RuleFor(b => b.Quantity)
-                .NotEmpty().WithMessage("Available is required.");
+                .NotEmpty().WithMessage("Quantity is required.");
 
             RuleFor(b => b.CategoryId)
-                .NotNull().WithMessage("Category is required.")
+                .NotNull().WithMessage("Category ID is required.")
                 .GreaterThan(0).WithMessage("Invalid category selection.");
         }
     }

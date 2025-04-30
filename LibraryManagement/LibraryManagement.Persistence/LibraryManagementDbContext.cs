@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using LibraryManagement.Domain.Entities;
+using LibraryManagement.Persistence.DataSeeders;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Persistence
@@ -11,7 +12,12 @@ namespace LibraryManagement.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Apply configurations
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            // Seed data
+            CategorySeeder.Seed(modelBuilder);
+            BookSeeder.Seed(modelBuilder);
         }
 
         public DbSet<User> Users {  get; set; }

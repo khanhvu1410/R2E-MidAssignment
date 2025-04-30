@@ -1,6 +1,6 @@
-﻿namespace LibraryManagement.Application.DTOs
+﻿namespace LibraryManagement.Application.DTOs.Category
 {
-    public class CategoryDTO
+    public class CategoryToReturnDTO
     {
         public int Id { get; set; }
 

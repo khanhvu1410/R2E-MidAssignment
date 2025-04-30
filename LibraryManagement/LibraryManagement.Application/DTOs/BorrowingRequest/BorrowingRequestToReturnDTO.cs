@@ -1,8 +1,8 @@
 ﻿using LibraryManagement.Domain.Enums;
 
-namespace LibraryManagement.Application.DTOs
+namespace LibraryManagement.Application.DTOs.BorrowingRequest
 {
-    public class BorrowingRequestDTO
+    public class BorrowingRequestToReturnDTO
     {
         public int Id { get; set; }
 

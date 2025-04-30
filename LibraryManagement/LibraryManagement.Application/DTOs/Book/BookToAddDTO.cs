@@ -1,6 +1,6 @@
 ﻿using LibraryManagement.Domain.Enums;
 
-namespace LibraryManagement.Application.DTOs
+namespace LibraryManagement.Application.DTOs.Book
 {
     public class BookToAddDTO
     {

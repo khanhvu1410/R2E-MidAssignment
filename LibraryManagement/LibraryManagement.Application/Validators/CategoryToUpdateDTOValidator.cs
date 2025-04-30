@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using LibraryManagement.Application.DTOs;
+using LibraryManagement.Application.DTOs.Category;
 
 namespace LibraryManagement.Application.Validators
 {
-    public class CategoryDTOValidator : AbstractValidator<CategoryDTO>
+    public class CategoryToUpdateDTOValidator : AbstractValidator<CategoryToUpdateDTO>
     {
-        public CategoryDTOValidator() 
+        public CategoryToUpdateDTOValidator() 
         {
             RuleFor(c => c.Name)
                 .NotEmpty().WithMessage("Name is required.")

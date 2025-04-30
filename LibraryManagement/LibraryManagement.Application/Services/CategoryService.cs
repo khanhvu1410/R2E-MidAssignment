@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using LibraryManagement.Application.Common;
-using LibraryManagement.Application.DTOs;
+using LibraryManagement.Application.DTOs.Category;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Application.Mappers;
 using LibraryManagement.Domain.Entities;
@@ -15,20 +15,20 @@ namespace LibraryManagement.Application.Services
         private readonly IGenericRepository<Category> _categoryRepository;
         private readonly IGenericRepository<Book> _bookRepository;
         private readonly IValidator<CategoryToAddDTO> _categoryToAddDTOValidator;
-        private readonly IValidator<CategoryDTO> _categoryDTOValidator;
+        private readonly IValidator<CategoryToUpdateDTO> _categoryToUpdateDTOValidator;
 
         public CategoryService(IGenericRepository<Category> categoryRepository, 
             IGenericRepository<Book> bookRepository,
             IValidator<CategoryToAddDTO> categoryToAddDTOvalidator, 
-            IValidator<CategoryDTO> categoryDTOValidator)
+            IValidator<CategoryToUpdateDTO> categoryToUpdateDTOValidator)
         {
             _categoryRepository = categoryRepository;
             _bookRepository = bookRepository;
             _categoryToAddDTOValidator = categoryToAddDTOvalidator;
-            _categoryDTOValidator = categoryDTOValidator;
+            _categoryToUpdateDTOValidator = categoryToUpdateDTOValidator;
         }
 
-        public async Task<CategoryDTO> AddCategoryAsync(CategoryToAddDTO categoryToAddDTO)
+        public async Task<CategoryToReturnDTO> AddCategoryAsync(CategoryToAddDTO categoryToAddDTO)
         {      
             var result = await _categoryToAddDTOValidator.ValidateAsync(categoryToAddDTO);
             if (!result.IsValid)
@@ -36,7 +36,7 @@ namespace LibraryManagement.Application.Services
                 throw new ValidationException(result.Errors);
             }
             var addedCategory = await _categoryRepository.AddAsync(categoryToAddDTO.ToCategory());
-            return addedCategory.ToCategoryDTO();
+            return addedCategory.ToCategoryToReturnDTO();
         }
 
         public async Task DeleteCategoryAsync(int id)
@@ -48,7 +48,7 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if a book belongs to this category
-            var books = _bookRepository.GetQueryable();
+            var books = await _bookRepository.GetAllAsync();
             var booksByCategoryId = books.Where(b => b.CategoryId == id);
             if (booksByCategoryId.Any())
             {
@@ -58,13 +58,15 @@ namespace LibraryManagement.Application.Services
             await _categoryRepository.DeleteAsync(id);
         }
 
-        public async Task<PagedResponse<CategoryDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize)
+        public async Task<PagedResponse<CategoryToReturnDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize)
         {
             var pagedResult = await _categoryRepository.GetPagedAsync(pageIndex, pageSize);
-            var pagedResponse = new PagedResponse<CategoryDTO>
+            var pagedResponse = new PagedResponse<CategoryToReturnDTO>
             {
-                Items = pagedResult.Items?.Select(c => c.ToCategoryDTO()).ToList(),
+                Items = pagedResult.Items?.Select(c => c.ToCategoryToReturnDTO()).ToList(),
                 PageIndex = pagedResult.PageIndex,
+                PageSize = pagedResult.PageSize,
+                TotalRecords = pagedResult.TotalRecords,
                 TotalPages = pagedResult.TotalPages,
                 HasPreviousPage = pagedResult.HasPreviousPage,
                 HasNextPage = pagedResult.HasNextPage,
@@ -72,30 +74,33 @@ namespace LibraryManagement.Application.Services
             return pagedResponse;
         }
 
-        public async Task<CategoryDTO> GetCategoryByIdAsync(int id)
+        public async Task<CategoryToReturnDTO> GetCategoryByIdAsync(int id)
         {
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
                 throw new NotFoundException($"Category with ID {id} not found.");
             }
-            return category.ToCategoryDTO();
+            return category.ToCategoryToReturnDTO();
         }
 
-        public async Task<CategoryDTO> UpdateCategoryAsync(CategoryDTO categoryDTO)
+        public async Task<CategoryToReturnDTO> UpdateCategoryAsync(int id, CategoryToUpdateDTO categoryToUpdateDTO)
         {
-            var result = await _categoryDTOValidator.ValidateAsync(categoryDTO);
+            var result = await _categoryToUpdateDTOValidator.ValidateAsync(categoryToUpdateDTO);
             if (!result.IsValid)
             {
                 throw new ValidationException(result.Errors);
             }
-            var category = await _categoryRepository.GetByIdAsync(categoryDTO.Id);
+            var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
-                throw new NotFoundException($"Category with ID {categoryDTO.Id} not found.");
+                throw new NotFoundException($"Category with ID {id} not found.");
             }
+
+            category.Name = categoryToUpdateDTO.Name;
+
             var updatedCategory = await _categoryRepository.UpdateAsync(category);
-            return updatedCategory.ToCategoryDTO();
+            return updatedCategory.ToCategoryToReturnDTO();
         }
     }
 }

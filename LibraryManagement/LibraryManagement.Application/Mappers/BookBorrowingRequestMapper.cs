@@ -1,31 +1,19 @@
-﻿using LibraryManagement.Application.DTOs;
+﻿using LibraryManagement.Application.DTOs.BorrowingRequest;
 using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers
 {
     public static class BookBorrowingRequestMapper
     {
-        public static BorrowingRequestDTO ToBookBorrowingRequestDTO(this BookBorrowingRequest bookBorrowingRequest)
+        public static BorrowingRequestToReturnDTO ToBookBorrowingRequestToReturnDTO(this BookBorrowingRequest bookBorrowingRequest)
         {
-            return new BorrowingRequestDTO
+            return new BorrowingRequestToReturnDTO
             {
                 Id = bookBorrowingRequest.Id,
                 RequestorId = bookBorrowingRequest.RequestorId,
                 ApproverId = bookBorrowingRequest.ApproverId,
                 RequestedDate = bookBorrowingRequest.RequestedDate,
                 Status = bookBorrowingRequest.Status
-            };
-        }
-
-        public static BookBorrowingRequest ToBookBorrowingRequest(this BorrowingRequestDTO borrowingRequestDTO)
-        {
-            return new BookBorrowingRequest
-            {
-                Id = borrowingRequestDTO.Id,
-                RequestorId = borrowingRequestDTO.RequestorId,
-                ApproverId = borrowingRequestDTO.ApproverId,
-                RequestedDate = borrowingRequestDTO.RequestedDate,
-                Status = borrowingRequestDTO.Status
             };
         }
     }
