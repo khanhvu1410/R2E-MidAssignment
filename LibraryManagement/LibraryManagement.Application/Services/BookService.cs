@@ -48,9 +48,8 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if this book is being borrowed
-            var requestDetails = await _bookBorrowingRequestDetails.GetAllAsync();
-            var requestDetailsByBookId = requestDetails.Where(rd => rd.BookId == book.Id);
-            if (requestDetailsByBookId.Any())
+            var requestDetailsExists = await _bookBorrowingRequestDetails.ExistsAsync(rd => rd.BookId == book.Id);
+            if (requestDetailsExists)
             {
                 throw new BadRequestException($"Book with ID {id} cannot be deleted.");
             }

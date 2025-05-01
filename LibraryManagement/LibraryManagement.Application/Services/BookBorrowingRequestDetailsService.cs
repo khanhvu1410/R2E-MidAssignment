@@ -2,7 +2,6 @@
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Application.Services
 {
@@ -15,11 +14,11 @@ namespace LibraryManagement.Application.Services
             _requestDetailsRepository = requestDetailsRepository;
         }
 
-        public async Task<IEnumerable<RequestDetailsToReturnDTO>> GetRequestDetailsByBorrowingRequestId(int borrowingRequetsId)
+        public async Task<IEnumerable<RequestDetailsToReturnDTO>> GetRequestDetailsByBorrowingRequestId(int borrowingRequestId)
         {
             var requestDetails = await _requestDetailsRepository.GetAllAsync(rd => rd.Book);
             return requestDetails
-                .Where(rd => rd.BookBorrowingRequestId == borrowingRequetsId)
+                .Where(rd => rd.BookBorrowingRequestId == borrowingRequestId)
                 .Select(rd => new RequestDetailsToReturnDTO
                 {
                     BookId = rd.BookId,

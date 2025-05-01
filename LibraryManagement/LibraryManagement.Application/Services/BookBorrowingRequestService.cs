@@ -24,18 +24,33 @@ namespace LibraryManagement.Application.Services
             _bookRepository = bookRepository;
         }
 
-        public async Task<BorrowingRequestToReturnDTO> AddBookBorrowingRequestAsync(IEnumerable<RequestDetailsToAddDTO> requestDetailsDTOs)
+        public async Task<BorrowingRequestToReturnDTO> AddBookBorrowingRequestAsync(int requestorId, IEnumerable<RequestDetailsToAddDTO> requestDetailsDTOs)
         {
             using var transaction = await _bookBorrowingRequestRepository.BeginTransactionAsync();
             try
             {
-                int requestorId = 2; // TODO: Replace with actual requestor ID from auth context
+                // Limit up to 3 request per month
+                var filteredBorrowingRequests = await _bookBorrowingRequestRepository.GetFiltersAsync(
+                    br => br.RequestorId == requestorId,
+                    br => br.RequestedDate.Month == DateTime.UtcNow.Month,
+                    br => br.RequestedDate.Year == DateTime.UtcNow.Year
+                );
+                if (filteredBorrowingRequests.Count() >= 3)
+                {
+                    throw new BadRequestException("Maximum 3 borrowing requests per month.");
+                }
+
+                // Limit up to 5 books per request
+                int count = requestDetailsDTOs.Count();               
+                if (count > 5)
+                {
+                    throw new BadRequestException("Maximum 5 books can be requested at a time");
+                }
 
                 // Pre-load all books in one query
                 var bookIds = requestDetailsDTOs.Select(x => x.BookId).Distinct();
                 var books = await _bookRepository.GetByIdsAsync(bookIds);
                 var booksDict = books.ToDictionary(b => b.Id);
-                int count = 0;
 
                 foreach (var requestDetailsDTO in requestDetailsDTOs)
                 {
@@ -50,14 +65,6 @@ namespace LibraryManagement.Application.Services
                     {
                         throw new BadRequestException($"Book with ID {requestDetailsDTO.BookId} is unavailable.");
                     }
-
-                    count++;
-                }
-
-                // Limit up to 5 books per request
-                if (count > 5)
-                {
-                    throw new BadRequestException("Maximum 5 books can be requested at a time");
                 }
 
                 // Create borrowing request
@@ -111,14 +118,12 @@ namespace LibraryManagement.Application.Services
             return bookBorrowingRequest.ToBookBorrowingRequestToReturnDTO();
         }
 
-        public async Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int id, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
+        public async Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int borrowingRequestId, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
         {
-            int approverId = 1; // TODO: Replace with actual approver ID from auth context
-            
-            var borrowingRequest = await _bookBorrowingRequestRepository.GetByIdAsync(id);
+            var borrowingRequest = await _bookBorrowingRequestRepository.GetByIdAsync(borrowingRequestId);
             if (borrowingRequest == null)
             {
-                throw new NotFoundException($"Book borrowing request with ID {id} not found.");
+                throw new NotFoundException($"Book borrowing request with ID {borrowingRequestId} not found.");
             }
             
             borrowingRequest.ApproverId = approverId;

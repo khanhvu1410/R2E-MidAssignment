@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Application.DTOs.BorrowingRequest;
+﻿using System.Security.Claims;
+using LibraryManagement.Application.DTOs.BorrowingRequest;
 using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -19,13 +20,16 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "NormalUser")]
         public async Task<ActionResult<BorrowingRequestToReturnDTO>> CreateBookBorrowingRequest(IEnumerable<RequestDetailsToAddDTO> bookBorrowingRequestDetailsDTOs)
         {
-            var addedBookBorrowingRequest = await _bookBorrowingRequestService.AddBookBorrowingRequestAsync(bookBorrowingRequestDetailsDTOs);
+            var requestorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
+            var addedBookBorrowingRequest = await _bookBorrowingRequestService.AddBookBorrowingRequestAsync(requestorId, bookBorrowingRequestDetailsDTOs);
             return CreatedAtAction(nameof(GetBookBorrowingRequestById), new { id =  addedBookBorrowingRequest.Id }, addedBookBorrowingRequest);
         }
 
         [HttpGet]
+        [Authorize(Roles = "SuperUser")]
         public async Task<ActionResult<IEnumerable<BorrowingRequestToReturnDTO>>> GetAllBookBorrowingRequests()
         {
             var bookBorrowingRequests = await _bookBorrowingRequestService.GetAllBookBorrowingRequestsAsync();
@@ -39,11 +43,12 @@ namespace LibraryManagement.API.Controllers
             return Ok(bookBorrowingRequest);
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{borrowingRequestId}")]
         [Authorize(Roles = "SuperUser")]
-        public async Task<ActionResult<BorrowingRequestToReturnDTO>> UpdateBookBorrowingRequest(int id, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
+        public async Task<ActionResult<BorrowingRequestToReturnDTO>> UpdateBookBorrowingRequest(int borrowingRequestId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
         {
-            var updatedBorrowingRequest = await _bookBorrowingRequestService.UpdateBookBorrowingRequestAsync(id, borrowingRequestToUpdateDTO);
+            var approverId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
+            var updatedBorrowingRequest = await _bookBorrowingRequestService.UpdateBookBorrowingRequestAsync(borrowingRequestId, approverId, borrowingRequestToUpdateDTO);
             return Ok(updatedBorrowingRequest);
         }
     }

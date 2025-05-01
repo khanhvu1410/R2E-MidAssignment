@@ -18,6 +18,8 @@ namespace LibraryManagement.Domain.Interfaces
 
         Task<T?> GetAsync(Expression<Func<T, bool>> expression);
 
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> expression);
+
         Task<T> AddAsync(T entity);
 
         Task<T> UpdateAsync(T entity);
