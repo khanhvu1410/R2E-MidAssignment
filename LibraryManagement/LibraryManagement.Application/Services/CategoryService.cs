@@ -6,7 +6,6 @@ using LibraryManagement.Application.Mappers;
 using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Exceptions;
 using LibraryManagement.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Application.Services
 {
@@ -48,9 +47,8 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if a book belongs to this category
-            var books = await _bookRepository.GetAllAsync();
-            var booksByCategoryId = books.Where(b => b.CategoryId == id);
-            if (booksByCategoryId.Any())
+            var bookExists = await _bookRepository.ExistsAsync(b => b.CategoryId == id);
+            if (bookExists)
             {
                 throw new BadRequestException($"Category with ID {id} cannot be deleted.");
             }

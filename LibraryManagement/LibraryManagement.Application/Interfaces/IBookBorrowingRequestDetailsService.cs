@@ -4,6 +4,6 @@ namespace LibraryManagement.Application.Interfaces
 {
     public interface IBookBorrowingRequestDetailsService
     {
-        public Task<IEnumerable<RequestDetailsToReturnDTO>> GetRequestDetailsByBorrowingRequestId(int borrowingRequetsId);
+        public Task<IEnumerable<RequestDetailsToReturnDTO>> GetRequestDetailsByBorrowingRequestId(int borrowingRequestId);
     }
 }

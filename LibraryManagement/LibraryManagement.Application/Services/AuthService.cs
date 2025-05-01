@@ -36,8 +36,8 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if user already exist
-            var existingUser = await _userRepository.GetAsync(u => u.Username == userToRegisterDTO.Username);
-            if (existingUser != null)
+            var userExists = await _userRepository.ExistsAsync(u => u.Username == userToRegisterDTO.Username);
+            if (userExists)
             {
                 throw new BadRequestException("Username already exitsts.");
             }
@@ -56,7 +56,6 @@ namespace LibraryManagement.Application.Services
             }
 
             var user = await _userRepository.GetAsync(u => u.Username == userToLoginDTO.Username);
-
             if (user == null || !PasswordHelper.VerifyPasswordHash(userToLoginDTO.Password, user.PasswordHash, user.PasswordSalt))
             {
                 throw new UnauthorizedException($"Invalid username or password.");

@@ -17,10 +17,10 @@ namespace LibraryManagement.API.Controllers
             _bookBorrowingRequestDetailsService = bookBorrowingRequestDetailsService;
         }
 
-        [HttpGet("{borrowingRequetsId}")]
-        public async Task<ActionResult<IEnumerable<RequestDetailsToReturnDTO>>> GetRequestDetailsByBorrowingRequestId(int borrowingRequetsId)
+        [HttpGet("{borrowingRequestId}")]
+        public async Task<ActionResult<IEnumerable<RequestDetailsToReturnDTO>>> GetRequestDetailsByBorrowingRequestId(int borrowingRequestId)
         {
-            var requestDetails = await _bookBorrowingRequestDetailsService.GetRequestDetailsByBorrowingRequestId(borrowingRequetsId);
+            var requestDetails = await _bookBorrowingRequestDetailsService.GetRequestDetailsByBorrowingRequestId(borrowingRequestId);
             return Ok(requestDetails);
         }
     }

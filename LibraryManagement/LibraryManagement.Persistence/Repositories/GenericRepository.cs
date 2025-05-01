@@ -67,6 +67,11 @@ namespace LibraryManagement.Persistence.Repositories
             return await _dbSet.FirstOrDefaultAsync(expression);
         }
 
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _dbSet.AnyAsync(expression);
+        }
+
         public async Task<T> UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
