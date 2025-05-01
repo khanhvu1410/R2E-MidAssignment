@@ -118,12 +118,18 @@ namespace LibraryManagement.Application.Services
             return bookBorrowingRequest.ToBookBorrowingRequestToReturnDTO();
         }
 
-        public async Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int borrowingRequestId, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
+        public async Task<IEnumerable<BorrowingRequestToReturnDTO>> GetBorrowingRequestsByRequestorId(int requestorId)
         {
-            var borrowingRequest = await _bookBorrowingRequestRepository.GetByIdAsync(borrowingRequestId);
+            var borrowingRequests = await _bookBorrowingRequestRepository.GetFiltersAsync(br => br.RequestorId == requestorId);           
+            return borrowingRequests.Select(br => br.ToBookBorrowingRequestToReturnDTO());
+        }
+
+        public async Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int id, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
+        {
+            var borrowingRequest = await _bookBorrowingRequestRepository.GetByIdAsync(id);
             if (borrowingRequest == null)
             {
-                throw new NotFoundException($"Book borrowing request with ID {borrowingRequestId} not found.");
+                throw new NotFoundException($"Book borrowing request with ID {id} not found.");
             }
             
             borrowingRequest.ApproverId = approverId;

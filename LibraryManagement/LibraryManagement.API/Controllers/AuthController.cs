@@ -15,14 +15,14 @@ namespace LibraryManagement.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(UserToRegisterDTO userToRegisterDTO)
         {
             await _authService.RegisterAsync(userToRegisterDTO);
             return StatusCode(201);
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<UserToReturnDTO>> Login(UserToLoginDTO userToLoginDTO)
         {
             var user = await _authService.LoginAsync(userToLoginDTO);

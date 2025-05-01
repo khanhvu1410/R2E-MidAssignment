@@ -11,6 +11,8 @@ namespace LibraryManagement.Application.Interfaces
 
         public Task<BorrowingRequestToReturnDTO> GetBookBorrowingRequestByIdAsync(int id);
 
-        public Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int borrowingRequestId, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO);
+        public Task<IEnumerable<BorrowingRequestToReturnDTO>> GetBorrowingRequestsByRequestorId(int requestorId);
+
+        public Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int id, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO);
     }
 }
