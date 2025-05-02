@@ -1,4 +1,6 @@
-﻿namespace LibraryManagement.Application.DTOs.Auth
+﻿using LibraryManagement.Domain.Enums;
+
+namespace LibraryManagement.Application.DTOs.Auth
 {
     public class UserToReturnDTO
     {
@@ -6,6 +8,6 @@
 
         public string? Email { get; set; }
 
-        public string? AccessToken { get; set; }
+        public UserRole Role { get; set; }
     }
 }

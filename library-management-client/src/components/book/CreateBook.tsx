@@ -9,15 +9,15 @@ import {
   Row,
   Select,
 } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
 import BodyLayout from '../layout/BodyLayout';
 import { Book } from '../../models/book';
-import { Link, useNavigate } from 'react-router-dom';
 import { PATH } from '../../constants/paths';
 import { createBookService } from '../../api/bookService';
 
 const CreateBook = () => {
   const breadcrumbItems = [
-    { title: <Link to={PATH.books}>Book</Link> },
+    { title: <Link to={PATH.admin.books}>Book</Link> },
     { title: 'Create' },
   ];
 
@@ -26,7 +26,7 @@ const CreateBook = () => {
   const onFinish: FormProps<Book>['onFinish'] = (values) => {
     createBookService(values)
       .then(() => {
-        navigate(PATH.books);
+        navigate(PATH.admin.books);
       })
       .catch((error) => {
         alert(error.message);
@@ -105,7 +105,7 @@ const CreateBook = () => {
             </Form.Item>
 
             <Form.Item>
-              <Link to={PATH.books}>
+              <Link to={PATH.admin.books}>
                 <Button
                   icon={<ArrowLeftOutlined />}
                   type="text"

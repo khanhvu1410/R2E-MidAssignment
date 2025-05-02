@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import {
   Button,
@@ -9,21 +10,27 @@ import {
   Row,
   Select,
 } from 'antd';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 import BodyLayout from '../layout/BodyLayout';
 import { Book } from '../../models/book';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PATH } from '../../constants/paths';
-import { useEffect, useState } from 'react';
 import { getBookByIdService, updateBookService } from '../../api/bookService';
-import dayjs from 'dayjs';
 
 const EditBook = () => {
+  const [title, setTitle] = useState<string>('');
+  const breadcrumbItems = [
+    { title: <Link to={PATH.admin.books}>Book</Link> },
+    { title: `${title}` },
+    { title: 'Edit' },
+  ];
+
   const { id } = useParams();
   const [form] = Form.useForm();
-  const [title, setTitle] = useState<string>('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getBookByIdService(id ?? '')
+    getBookByIdService(parseInt(id ?? '0'))
       .then((response) => {
         form.setFieldsValue({
           ...response.data,
@@ -36,17 +43,10 @@ const EditBook = () => {
       });
   }, [form, id]);
 
-  const breadcrumbItems = [
-    { title: <Link to={PATH.books}>Book</Link> },
-    { title: `${title}` },
-    { title: 'Edit' },
-  ];
-  const navigate = useNavigate();
-
   const onFinish: FormProps<Book>['onFinish'] = (values) => {
-    updateBookService(values, id ?? '')
+    updateBookService(values, parseInt(id ?? '0'))
       .then(() => {
-        navigate(PATH.books);
+        navigate(PATH.admin.books);
       })
       .catch((error) => alert(error.message));
   };
@@ -124,7 +124,7 @@ const EditBook = () => {
             </Form.Item>
 
             <Form.Item>
-              <Link to={PATH.books}>
+              <Link to={PATH.admin.books}>
                 <Button
                   icon={<ArrowLeftOutlined />}
                   type="text"

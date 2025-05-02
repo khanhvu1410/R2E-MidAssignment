@@ -2,8 +2,12 @@ import { Book } from '../models/book';
 import { ENDPOINT_API } from '../setup/config';
 import { httpClient } from '../setup/httpClient';
 
-export const getAllBooksService = () => {
-  return httpClient.get(ENDPOINT_API.book.getAll);
+export const getAllBooksService = (pageIndex: number, pageSize: number) => {
+  return httpClient.get(
+    ENDPOINT_API.book.getAll
+      .replace(':pageIndex', pageIndex.toString())
+      .replace(':pageSize', pageSize.toString())
+  );
 };
 
 export const createBookService = (book: Book) => {
@@ -16,10 +20,15 @@ export const deleteBookService = (id: number) => {
   );
 };
 
-export const getBookByIdService = (id: string) => {
-  return httpClient.get(ENDPOINT_API.book.getById.replace(':id', id));
+export const getBookByIdService = (id: number) => {
+  return httpClient.get(
+    ENDPOINT_API.book.getById.replace(':id', id.toString())
+  );
 };
 
-export const updateBookService = (book: Book, id: string) => {
-  return httpClient.put(ENDPOINT_API.book.update.replace(':id', id), book);
+export const updateBookService = (book: Book, id: number) => {
+  return httpClient.put(
+    ENDPOINT_API.book.update.replace(':id', id.toString()),
+    book
+  );
 };

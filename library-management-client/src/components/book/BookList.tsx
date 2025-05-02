@@ -1,29 +1,27 @@
+import { useEffect, useState } from 'react';
 import {
-  Alert,
   Button,
   Card,
   List,
+  message,
   Popconfirm,
   Space,
   Spin,
   Table,
   TableProps,
-  Tag,
   Tooltip,
 } from 'antd';
-import { useEffect, useState } from 'react';
-import { Book } from '../../models/book';
-
 import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import BodyLayout from '../layout/BodyLayout';
+import { Book } from '../../models/book';
 import { deleteBookService, getAllBooksService } from '../../api/bookService';
 import { Link } from 'react-router-dom';
 import { PATH } from '../../constants/paths';
-import BodyLayout from '../layout/BodyLayout';
 import { useMediaQuery } from 'react-responsive';
 
 const defaultQueryParameters = {
@@ -34,14 +32,9 @@ const defaultQueryParameters = {
 };
 
 const BookList = () => {
+  const breadcrumbItems = [{ title: 'Book' }];
+
   const columns: TableProps<Book>['columns'] = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      align: 'center',
-      width: 80,
-    },
     {
       title: 'Title',
       dataIndex: 'title',
@@ -53,29 +46,21 @@ const BookList = () => {
       key: 'author',
     },
     {
-      title: 'Published Date',
-      dataIndex: 'publishedDate',
-      key: 'publishedDate',
+      title: 'ISBN',
+      dataIndex: 'isbn',
+      key: 'isbn',
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Publication year',
+      dataIndex: 'publicationYear',
+      key: 'publicationYear',
       align: 'center',
-      fixed: 'right',
-      render: (status) => (
-        <Tag
-          style={{ textTransform: 'capitalize' }}
-          color={status === 'available' ? 'green' : 'red'}
-        >
-          {status}
-        </Tag>
-      ),
+    },
+    {
+      title: 'Category name',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
+      align: 'center',
     },
     {
       title: 'Actions',
@@ -93,7 +78,7 @@ const BookList = () => {
             />
           </Tooltip>
           <Tooltip title="Edit">
-            <Link to={PATH.editBook.replace(':id', record.id.toString())}>
+            <Link to={PATH.admin.editBook.replace(':id', record.id.toString())}>
               <Button
                 type="text"
                 icon={<EditOutlined />}
@@ -121,39 +106,45 @@ const BookList = () => {
     },
   ];
 
+  const isSmallDevice = useMediaQuery({ maxWidth: 768 });
+
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [bookQueryParameters, setBookQueryParameters] = useState(
     defaultQueryParameters
   );
 
   useEffect(() => {
     let isSetData = true;
-    const timeoutId = setTimeout(() => {
-      getAllBooksService()
-        .then((response) => {
-          if (isSetData) {
-            setBooks(
-              response.data.map((book: Book) => {
-                return {
-                  ...book,
-                  key: book.id,
-                };
-              })
-            );
-          }
-        })
-        .catch((err) => {
-          setError(err.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }, 1000);
+
+    getAllBooksService(
+      bookQueryParameters.pageIndex,
+      bookQueryParameters.pageSize
+    )
+      .then((response) => {
+        if (isSetData) {
+          setBooks(
+            response.data.items.map((book: Book) => {
+              return {
+                ...book,
+                key: book.id,
+              };
+            })
+          );
+          setBookQueryParameters({
+            ...bookQueryParameters,
+            totalCount: response.data.totalRecords,
+          });
+        }
+      })
+      .catch((err) => {
+        message.error(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
     return () => {
       isSetData = false;
-      clearTimeout(timeoutId);
     };
   }, [
     bookQueryParameters.pageIndex,
@@ -170,7 +161,7 @@ const BookList = () => {
         });
       })
       .catch((err) => {
-        window.alert(err.message);
+        message.error(err.message);
       });
   };
 
@@ -182,15 +173,20 @@ const BookList = () => {
     });
   };
 
-  const breadcrumbItems = [{ title: 'Book' }];
-  const isSmallDevice = useMediaQuery({ maxWidth: 768 });
+  const handleOnPageSizeChange = (current: number, size: number) => {
+    setBookQueryParameters({
+      ...bookQueryParameters,
+      pageIndex: current,
+      pageSize: size,
+    });
+  };
 
   return (
     <BodyLayout
       breadcrumbItems={breadcrumbItems}
       cardTitle="Books List"
       createButton={
-        <Link to={PATH.createBook}>
+        <Link to={PATH.admin.createBook}>
           <Button type="primary" icon={<PlusOutlined />}>
             Create Book
           </Button>
@@ -209,19 +205,21 @@ const BookList = () => {
           </div>
         )}
 
-        {error != null && (
-          <Alert message="Error" description={error} type="error" showIcon />
-        )}
-
-        {isSmallDevice && !error && !isLoading && (
+        {isSmallDevice && !isLoading && (
           <List
             dataSource={books}
             pagination={{
               pageSize: bookQueryParameters.pageSize,
               current: bookQueryParameters.pageIndex,
+              total: bookQueryParameters.totalCount,
+              showSizeChanger: true,
+              pageSizeOptions: [5, 10, 20, 50],
               showTotal: (total) => `Total ${total} books`,
               onChange: (page, pageSize) => {
                 handleOnPageChange(page, pageSize);
+              },
+              onShowSizeChange: (current, size) => {
+                handleOnPageSizeChange(current, size);
               },
             }}
             renderItem={(book) => (
@@ -238,7 +236,12 @@ const BookList = () => {
                     />
                   </Tooltip>,
                   <Tooltip title="Edit">
-                    <Link to={PATH.editBook.replace(':id', book.id.toString())}>
+                    <Link
+                      to={PATH.admin.editBook.replace(
+                        ':id',
+                        book.id.toString()
+                      )}
+                    >
                       <Button
                         type="text"
                         icon={<EditOutlined />}
@@ -271,20 +274,23 @@ const BookList = () => {
                   <strong>Author:</strong> {book.author}
                 </p>
                 <p>
-                  <strong>Published date:</strong> {book.publishedDate}
+                  <strong>ISBN:</strong> {book.isbn}
                 </p>
                 <p>
-                  <strong>Catgory:</strong> {book.category}
+                  <strong>Publication year:</strong> {book.publicationYear}
                 </p>
                 <p>
-                  <strong>Status:</strong> {book.status}
+                  <strong>Quantity:</strong> {book.quantity}
+                </p>
+                <p>
+                  <strong>Category name:</strong> {book.categoryName}
                 </p>
               </Card>
             )}
           />
         )}
 
-        {!isLoading && !error && !isSmallDevice && (
+        {!isLoading && !isSmallDevice && (
           <Table<Book>
             columns={columns}
             dataSource={books}
@@ -294,9 +300,15 @@ const BookList = () => {
             pagination={{
               pageSize: bookQueryParameters.pageSize,
               current: bookQueryParameters.pageIndex,
+              total: bookQueryParameters.totalCount,
+              showSizeChanger: true,
+              pageSizeOptions: [5, 10, 20, 50],
               showTotal: (total) => `Total ${total} books`,
               onChange: (page, pageSize) => {
                 handleOnPageChange(page, pageSize);
+              },
+              onShowSizeChange: (current, size) => {
+                handleOnPageSizeChange(current, size);
               },
             }}
           />

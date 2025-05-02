@@ -1,18 +1,17 @@
 ﻿using LibraryManagement.Application.DTOs.Auth;
 using LibraryManagement.Domain.Entities;
-using LibraryManagement.Domain.Enums;
 
 namespace LibraryManagement.Application.Mappers
 {
     public static class UserMapper
     {
-        public static UserToReturnDTO ToUserToReturnDTO(this User user, string accessToken)
+        public static UserToReturnDTO ToUserToReturnDTO(this User user)
         {
             return new UserToReturnDTO
             {
                 Username = user.Username,
                 Email = user.Email,
-                AccessToken = accessToken
+                Role = user.Role,
             };
         }
 

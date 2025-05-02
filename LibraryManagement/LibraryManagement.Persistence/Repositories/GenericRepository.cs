@@ -52,6 +52,23 @@ namespace LibraryManagement.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _dbSet.AsQueryable();
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            var items = await query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var totalRecords = await _dbSet.CountAsync();
+            return new PagedResult<T>(items, pageIndex, pageSize, totalRecords);
+        }
+
         public async Task<IEnumerable<T>> GetFiltersAsync(params Expression<Func<T, bool>>[] filters)
         {
             var query = _dbSet.AsQueryable();
@@ -92,17 +109,6 @@ namespace LibraryManagement.Persistence.Repositories
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return await _context.Database.BeginTransactionAsync();
-        }
-
-        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize)
-        {
-            var items = await _dbSet
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var totalRecords = await _dbSet.CountAsync();            
-            return new PagedResult<T>(items, pageIndex, pageSize, totalRecords);
         }
     }
 }

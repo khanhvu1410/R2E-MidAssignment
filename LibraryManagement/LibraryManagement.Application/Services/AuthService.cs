@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using LibraryManagement.Application.Common;
 using LibraryManagement.Application.DTOs.Auth;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Application.Mappers;
@@ -47,7 +48,7 @@ namespace LibraryManagement.Application.Services
             await _userRepository.AddAsync(user);
         }
 
-        public async Task<UserToReturnDTO> LoginAsync(UserToLoginDTO userToLoginDTO)
+        public async Task<LoginResponse> LoginAsync(UserToLoginDTO userToLoginDTO)
         {
             var result = await _userToLoginDTOValidator.ValidateAsync(userToLoginDTO);
             if (!result.IsValid)
@@ -62,7 +63,11 @@ namespace LibraryManagement.Application.Services
             }
 
             var accessToken = _tokenService.GenerateToken(user);
-            return user.ToUserToReturnDTO(accessToken);
+            return new LoginResponse
+            {
+                User = user.ToUserToReturnDTO(),
+                AccessToken = accessToken
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Application.DTOs.Auth;
+﻿using LibraryManagement.Application.Common;
+using LibraryManagement.Application.DTOs.Auth;
 using LibraryManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,10 +24,10 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<UserToReturnDTO>> Login(UserToLoginDTO userToLoginDTO)
+        public async Task<ActionResult<LoginResponse>> Login(UserToLoginDTO userToLoginDTO)
         {
-            var user = await _authService.LoginAsync(userToLoginDTO);
-            return Ok(user);
+            var response = await _authService.LoginAsync(userToLoginDTO);
+            return Ok(response);
         }
     }
 }

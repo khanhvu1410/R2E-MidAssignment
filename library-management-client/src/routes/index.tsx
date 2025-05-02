@@ -4,15 +4,26 @@ import BookList from '../components/book/BookList';
 import Dashboard from '../components/dashboard/Dashboard';
 import ManageBook from '../pages/admin/ManageBook';
 import EditBook from '../components/book/EditBook';
+import Login from '../pages/auth/Login';
+import PrivateRoute from '../components/auth/PrivateRoute';
+import { UserRole } from '../models/auth';
 
 export const AppRoutes = [
   {
-    element: <ManageBook />,
+    path: PATH.auth.login,
+    element: <Login />,
+  },
+  {
+    element: (
+      <PrivateRoute requiredRole={UserRole.SuperUser}>
+        <ManageBook />
+      </PrivateRoute>
+    ),
     children: [
-      { path: PATH.dashboard, element: <Dashboard /> },
-      { path: PATH.books, element: <BookList /> },
-      { path: PATH.createBook, element: <CreateBook /> },
-      { path: PATH.editBook, element: <EditBook /> },
+      { path: PATH.admin.dashboard, element: <Dashboard /> },
+      { path: PATH.admin.books, element: <BookList /> },
+      { path: PATH.admin.createBook, element: <CreateBook /> },
+      { path: PATH.admin.editBook, element: <EditBook /> },
     ],
   },
 ];
