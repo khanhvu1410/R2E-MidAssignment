@@ -1,4 +1,3 @@
-import { Image } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 
 const CustomHeader = () => {

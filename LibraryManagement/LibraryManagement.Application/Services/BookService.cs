@@ -59,7 +59,7 @@ namespace LibraryManagement.Application.Services
 
         public async Task<PagedResponse<BookToReturnDTO>> GetBooksPaginatedAsync(int pageIndex, int pageSize)
         {
-            var pagedResult = await _bookRepository.GetPagedAsync(pageIndex, pageSize);
+            var pagedResult = await _bookRepository.GetPagedAsync(pageIndex, pageSize, b => b.Category);
             var pagedResponse = new PagedResponse<BookToReturnDTO>
             {
                 Items = pagedResult.Items?.Select(b => b.ToBookToReturnDTO()).ToList(),

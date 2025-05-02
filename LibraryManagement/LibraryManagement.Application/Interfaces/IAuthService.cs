@@ -1,4 +1,5 @@
-﻿using LibraryManagement.Application.DTOs.Auth;
+﻿using LibraryManagement.Application.Common;
+using LibraryManagement.Application.DTOs.Auth;
 
 namespace LibraryManagement.Application.Interfaces
 {
@@ -6,6 +7,6 @@ namespace LibraryManagement.Application.Interfaces
     {
         Task RegisterAsync(UserToRegisterDTO userToRegisterDTO);
 
-        Task<UserToReturnDTO> LoginAsync(UserToLoginDTO userToLoginDTO);
+        Task<LoginResponse> LoginAsync(UserToLoginDTO userToLoginDTO);
     }
 }

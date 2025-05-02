@@ -8,12 +8,12 @@ import { PATH } from '../../constants/paths';
 const SideBar = () => {
   const menuItems: MenuProps['items'] = [
     {
-      key: PATH.dashboard,
+      key: PATH.admin.dashboard,
       label: 'Dashboard',
       icon: AppstoreOutlined,
     },
     {
-      key: PATH.books,
+      key: PATH.admin.books,
       label: 'Books List',
       icon: BookOutlined,
     },

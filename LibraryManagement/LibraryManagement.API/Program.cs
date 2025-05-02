@@ -110,6 +110,18 @@ namespace LibraryManagement.API
                 };
             });
 
+            var libraryManagementClientOrigins = "_libraryManagementClientOrigins";
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(libraryManagementClientOrigins, policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -122,9 +134,11 @@ namespace LibraryManagement.API
                 });
             }
 
+            app.UseCors(libraryManagementClientOrigins);
+
             app.UseHttpsRedirection();
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>(); 
 
             app.UseAuthentication();
 
