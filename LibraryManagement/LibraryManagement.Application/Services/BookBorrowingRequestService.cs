@@ -1,4 +1,6 @@
-﻿using LibraryManagement.Application.DTOs.BorrowingRequest;
+﻿using LibraryManagement.Application.Common;
+using LibraryManagement.Application.DTOs.Book;
+using LibraryManagement.Application.DTOs.BorrowingRequest;
 using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Application.Mappers;
@@ -6,6 +8,7 @@ using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Enums;
 using LibraryManagement.Domain.Exceptions;
 using LibraryManagement.Domain.Interfaces;
+using LibraryManagement.Domain.Models;
 
 namespace LibraryManagement.Application.Services
 {
@@ -30,11 +33,7 @@ namespace LibraryManagement.Application.Services
             try
             {
                 // Limit up to 3 request per month
-                var filteredBorrowingRequests = await _bookBorrowingRequestRepository.GetFiltersAsync(
-                    br => br.RequestorId == requestorId,
-                    br => br.RequestedDate.Month == DateTime.UtcNow.Month,
-                    br => br.RequestedDate.Year == DateTime.UtcNow.Year
-                );
+                var filteredBorrowingRequests = await GetBookBorrowingRequestsThisMonthAsync(requestorId);
                 if (filteredBorrowingRequests.Count() >= 3)
                 {
                     throw new BadRequestException("Maximum 3 borrowing requests per month.");
@@ -44,7 +43,7 @@ namespace LibraryManagement.Application.Services
                 int count = requestDetailsDTOs.Count();               
                 if (count > 5)
                 {
-                    throw new BadRequestException("Maximum 5 books can be requested at a time");
+                    throw new BadRequestException("Maximum 5 books can be requested at a time.");
                 }
 
                 // Pre-load all books in one query
@@ -102,10 +101,20 @@ namespace LibraryManagement.Application.Services
             }     
         }
 
-        public async Task<IEnumerable<BorrowingRequestToReturnDTO>> GetAllBookBorrowingRequestsAsync()
+        public async Task<PagedResponse<BorrowingRequestToReturnDTO>> GetBookBorrowingRequestsPaginatedAsync(int pageIndex, int pageSize)
         {
-            var borrowingRequests = await _bookBorrowingRequestRepository.GetAllAsync();
-            return borrowingRequests.Select(bbr => bbr.ToBookBorrowingRequestToReturnDTO());
+            var pagedResult = await _bookBorrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, null);
+            var pagedResponse = new PagedResponse<BorrowingRequestToReturnDTO>
+            {
+                Items = pagedResult.Items?.Select(br => br.ToBookBorrowingRequestToReturnDTO()).ToList(),
+                PageIndex = pagedResult.PageIndex,
+                PageSize = pagedResult.PageSize,
+                TotalRecords = pagedResult.TotalRecords,
+                TotalPages = pagedResult.TotalPages,
+                HasPreviousPage = pagedResult.HasPreviousPage,
+                HasNextPage = pagedResult.HasNextPage,
+            };
+            return pagedResponse;
         }
 
         public async Task<BorrowingRequestToReturnDTO> GetBookBorrowingRequestByIdAsync(int id)
@@ -118,10 +127,30 @@ namespace LibraryManagement.Application.Services
             return bookBorrowingRequest.ToBookBorrowingRequestToReturnDTO();
         }
 
-        public async Task<IEnumerable<BorrowingRequestToReturnDTO>> GetBorrowingRequestsByRequestorId(int requestorId)
+        public async Task<IEnumerable<BorrowingRequestToReturnDTO>> GetBookBorrowingRequestsThisMonthAsync(int requestorId)
         {
-            var borrowingRequests = await _bookBorrowingRequestRepository.GetFiltersAsync(br => br.RequestorId == requestorId);           
-            return borrowingRequests.Select(br => br.ToBookBorrowingRequestToReturnDTO());
+            var filteredBorrowingRequests = await _bookBorrowingRequestRepository.GetFiltersAsync(
+                br => br.RequestorId == requestorId,
+                br => br.RequestedDate.Month == DateTime.UtcNow.Month,
+                br => br.RequestedDate.Year == DateTime.UtcNow.Year
+            );
+            return filteredBorrowingRequests.Select(br => br.ToBookBorrowingRequestToReturnDTO());
+        }
+
+        public async Task<PagedResponse<BorrowingRequestToReturnDTO>> GetBorrowingRequestsByRequestorId(int pageIndex, int pageSize, int requestorId)
+        {
+            var pagedResult = await _bookBorrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, br => br.RequestorId == requestorId);
+            var pagedResponse = new PagedResponse<BorrowingRequestToReturnDTO>
+            {
+                Items = pagedResult.Items?.Select(br => br.ToBookBorrowingRequestToReturnDTO()).ToList(),
+                PageIndex = pagedResult.PageIndex,
+                PageSize = pagedResult.PageSize,
+                TotalRecords = pagedResult.TotalRecords,
+                TotalPages = pagedResult.TotalPages,
+                HasPreviousPage = pagedResult.HasPreviousPage,
+                HasNextPage = pagedResult.HasNextPage,
+            };
+            return pagedResponse;
         }
 
         public async Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int id, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)

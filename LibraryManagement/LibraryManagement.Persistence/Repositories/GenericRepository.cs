@@ -52,9 +52,15 @@ namespace LibraryManagement.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize, params Expression<Func<T, object>>[] includes)
+        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includes)
         {
             var query = _dbSet.AsQueryable();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
             foreach (var include in includes)
             {
                 query = query.Include(include);
@@ -65,7 +71,7 @@ namespace LibraryManagement.Persistence.Repositories
                 .Take(pageSize)
                 .ToListAsync();
 
-            var totalRecords = await _dbSet.CountAsync();
+            var totalRecords = await query.CountAsync();
             return new PagedResult<T>(items, pageIndex, pageSize, totalRecords);
         }
 

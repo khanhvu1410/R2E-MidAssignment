@@ -10,7 +10,7 @@ namespace LibraryManagement.Domain.Interfaces
 
         Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
 
-        Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize, params Expression<Func<T, object>>[] includes);
+        Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includes);
 
         Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<int> ids);
 

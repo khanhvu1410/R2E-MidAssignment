@@ -1,11 +1,9 @@
-﻿namespace LibraryManagement.Application.DTOs.RequestDetails
+﻿using LibraryManagement.Application.DTOs.Book;
+
+namespace LibraryManagement.Application.DTOs.RequestDetails
 {
     public class RequestDetailsToReturnDTO
     {
-        public int BookId { get; set; }
-
-        public string? BookName { get; set; }
-
-        public int BookQuantity { get; set; }
+        public BookToReturnDTO? Book { get; set; }
     }
 }

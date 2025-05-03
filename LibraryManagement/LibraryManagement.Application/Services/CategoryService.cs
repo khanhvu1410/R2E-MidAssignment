@@ -64,7 +64,7 @@ namespace LibraryManagement.Application.Services
 
         public async Task<PagedResponse<CategoryToReturnDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize)
         {
-            var pagedResult = await _categoryRepository.GetPagedAsync(pageIndex, pageSize);
+            var pagedResult = await _categoryRepository.GetPagedAsync(pageIndex, pageSize, null);
             var pagedResponse = new PagedResponse<CategoryToReturnDTO>
             {
                 Items = pagedResult.Items?.Select(c => c.ToCategoryToReturnDTO()).ToList(),

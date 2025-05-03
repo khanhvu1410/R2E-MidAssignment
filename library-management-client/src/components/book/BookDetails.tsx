@@ -6,11 +6,27 @@ import { getBookByIdService } from '../../api/bookService';
 import { Book } from '../../models/book';
 import BodyLayout from '../layout/BodyLayout';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useAuthContext } from '../../context/AuthContext';
+import { UserRole } from '../../models/auth';
 
 const BookDetails = () => {
   const [title, setTitle] = useState<string>('');
+  const { user } = useAuthContext();
+
   const breadcrumbItems = [
-    { title: <Link to={PATH.admin.books}>Book</Link> },
+    {
+      title: (
+        <Link
+          to={
+            user?.role === UserRole.SuperUser
+              ? PATH.admin.books
+              : PATH.user.books
+          }
+        >
+          Book
+        </Link>
+      ),
+    },
     { title: `${title}` },
     { title: 'Details' },
   ];
@@ -60,7 +76,11 @@ const BookDetails = () => {
           {book.categoryName}
         </Descriptions.Item>
       </Descriptions>
-      <Link to={PATH.admin.books}>
+      <Link
+        to={
+          user?.role === UserRole.SuperUser ? PATH.admin.books : PATH.user.books
+        }
+      >
         <Button
           icon={<ArrowLeftOutlined />}
           type="text"
