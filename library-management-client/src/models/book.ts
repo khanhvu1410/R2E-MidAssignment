@@ -6,5 +6,6 @@ export interface Book {
   publicationYear: number;
   description: string;
   quantity: number;
+  categoryId: number;
   categoryName: string;
 }

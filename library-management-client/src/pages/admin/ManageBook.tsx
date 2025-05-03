@@ -1,4 +1,4 @@
-import { Alert, Layout } from 'antd';
+import { Layout } from 'antd';
 import CustomHeader from '../../components/layout/CustomHeader';
 import SideBar from '../../components/layout/SideBar';
 import { Outlet } from 'react-router-dom';

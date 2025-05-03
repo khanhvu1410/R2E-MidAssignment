@@ -26,7 +26,16 @@ namespace LibraryManagement.API.Controllers
             return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.Id }, createdCategory);
         }
 
+        [HttpGet("All")]
+        [Authorize(Roles = "SuperUser")]
+        public async Task<ActionResult<IEnumerable<CategoryToReturnDTO>>> GetAllCategories()
+        {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            return Ok(categories);
+        }
+
         [HttpGet]
+        [Authorize(Roles = "SuperUser")]
         public async Task<ActionResult<PagedResponse<CategoryToReturnDTO>>> GetCatgories(int pageIndex, int pageSize)
         {
             var pagedResponse = await _categoryService.GetCategoriesPaginatedAsync(pageIndex, pageSize);
@@ -34,6 +43,7 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "SuperUser")]
         public async Task<ActionResult<CategoryToReturnDTO>> GetCategoryById(int id)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);

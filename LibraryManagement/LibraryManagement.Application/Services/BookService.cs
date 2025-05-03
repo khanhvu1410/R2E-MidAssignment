@@ -75,7 +75,7 @@ namespace LibraryManagement.Application.Services
 
         public async Task<BookToReturnDTO> GetBookByIdAsync(int id)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
+            var book = await _bookRepository.GetByIdAsync(id, b => b.Category);
             if (book == null)
             {
                 throw new NotFoundException($"Book with ID {id} not found.");

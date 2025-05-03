@@ -18,7 +18,7 @@ namespace LibraryManagement.Application.Validators
 
             RuleFor(b => b.ISBN)
                 .Length(10, 13).WithMessage("ISBN must be 10 or 13 characters")
-                .Matches(@"^[0-9\-]+$").WithMessage("ISBN contains invalid characters");
+                .Matches(@"^[0-9]+$").WithMessage("ISBN contains invalid characters");
 
             RuleFor(b => b.PublicationYear)
                 .NotNull().WithMessage("Publication year is required.")

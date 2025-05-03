@@ -7,6 +7,10 @@ import EditBook from '../components/book/EditBook';
 import Login from '../pages/auth/Login';
 import PrivateRoute from '../components/auth/PrivateRoute';
 import { UserRole } from '../models/auth';
+import BookDetails from '../components/book/BookDetails';
+import CategoryList from '../components/category/CategoryList';
+import CreateCategory from '../components/category/CreateCategory';
+import EditCategory from '../components/category/EditCategory';
 
 export const AppRoutes = [
   {
@@ -22,8 +26,12 @@ export const AppRoutes = [
     children: [
       { path: PATH.admin.dashboard, element: <Dashboard /> },
       { path: PATH.admin.books, element: <BookList /> },
+      { path: PATH.admin.bookDetails, element: <BookDetails /> },
       { path: PATH.admin.createBook, element: <CreateBook /> },
       { path: PATH.admin.editBook, element: <EditBook /> },
+      { path: PATH.admin.categories, element: <CategoryList /> },
+      { path: PATH.admin.createCategory, element: <CreateCategory /> },
+      { path: PATH.admin.editCategory, element: <EditCategory /> },
     ],
   },
 ];

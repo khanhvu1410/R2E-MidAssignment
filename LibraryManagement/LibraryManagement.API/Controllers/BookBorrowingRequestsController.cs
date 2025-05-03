@@ -37,6 +37,7 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "SuperUser")]
         public async Task<ActionResult<BorrowingRequestToReturnDTO>> GetBookBorrowingRequestById(int id)
         {
             var bookBorrowingRequest = await _bookBorrowingRequestService.GetBookBorrowingRequestByIdAsync(id);
