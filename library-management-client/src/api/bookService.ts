@@ -2,9 +2,9 @@ import { Book } from '../models/book';
 import { ENDPOINT_API } from '../setup/config';
 import { httpClient } from '../setup/httpClient';
 
-export const getAllBooksService = (pageIndex: number, pageSize: number) => {
+export const getPagedBooksService = (pageIndex: number, pageSize: number) => {
   return httpClient.get(
-    ENDPOINT_API.book.getAll
+    ENDPOINT_API.book.getPaged
       .replace(':pageIndex', pageIndex.toString())
       .replace(':pageSize', pageSize.toString())
   );

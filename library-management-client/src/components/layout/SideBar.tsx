@@ -1,4 +1,9 @@
-import { AppstoreOutlined, BookOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  BookOutlined,
+  ShoppingCartOutlined,
+  TagOutlined,
+} from '@ant-design/icons';
 import { Menu, MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import React from 'react';
@@ -14,8 +19,18 @@ const SideBar = () => {
     },
     {
       key: PATH.admin.books,
-      label: 'Books List',
+      label: 'Book Management',
       icon: BookOutlined,
+    },
+    {
+      key: PATH.admin.categories,
+      label: 'Category Management',
+      icon: TagOutlined,
+    },
+    {
+      key: 'test',
+      label: 'Borrowing Requests',
+      icon: ShoppingCartOutlined,
     },
   ].map((item) => {
     return {
@@ -29,7 +44,7 @@ const SideBar = () => {
   const navigate = useNavigate();
 
   return (
-    <Sider width={200} breakpoint="lg" collapsedWidth={0}>
+    <Sider width={215} breakpoint="lg" collapsedWidth={0}>
       <Menu
         mode="inline"
         items={menuItems}

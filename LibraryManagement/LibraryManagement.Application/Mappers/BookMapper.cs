@@ -16,6 +16,7 @@ namespace LibraryManagement.Application.Mappers
                 PublicationYear = book.PublicationYear,
                 Description = book.Description,
                 Quantity = book.Quantity,
+                CategoryId = book.CategoryId,
                 CategoryName = book.Category?.Name,
             };
         }

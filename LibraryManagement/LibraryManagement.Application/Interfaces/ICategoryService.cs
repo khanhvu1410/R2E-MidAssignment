@@ -7,6 +7,8 @@ namespace LibraryManagement.Application.Interfaces
     {
         public Task<CategoryToReturnDTO> AddCategoryAsync(CategoryToAddDTO categoryToAddDTO);
 
+        public Task<IEnumerable<CategoryToReturnDTO>> GetAllCategoriesAsync();
+
         public Task<CategoryToReturnDTO> GetCategoryByIdAsync(int id);
 
         public Task<PagedResponse<CategoryToReturnDTO>> GetCategoriesPaginatedAsync(int pageIndex, int pageSize);

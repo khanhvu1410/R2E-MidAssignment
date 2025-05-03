@@ -40,7 +40,7 @@ namespace LibraryManagement.Persistence.Repositories
             var query = _dbSet.AsQueryable();
             foreach (var include in includes)
             {
-                query.Include(include);
+                query = query.Include(include);
             }
             return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         }

@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 import BodyLayout from '../layout/BodyLayout';
 import { Book } from '../../models/book';
-import { deleteBookService, getAllBooksService } from '../../api/bookService';
+import { deleteBookService, getPagedBooksService } from '../../api/bookService';
 import { Link } from 'react-router-dom';
 import { PATH } from '../../constants/paths';
 import { useMediaQuery } from 'react-responsive';
@@ -51,13 +51,19 @@ const BookList = () => {
       key: 'isbn',
     },
     {
-      title: 'Publication year',
+      title: 'Publication Year',
       dataIndex: 'publicationYear',
       key: 'publicationYear',
       align: 'center',
     },
     {
-      title: 'Category name',
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
+    },
+    {
+      title: 'Category Name',
       dataIndex: 'categoryName',
       key: 'categoryName',
       align: 'center',
@@ -71,11 +77,15 @@ const BookList = () => {
       render: (_, record) => (
         <Space size="middle">
           <Tooltip title="View details">
-            <Button
-              type="text"
-              icon={<EyeOutlined />}
-              aria-label={`View ${record.title}`}
-            />
+            <Link
+              to={PATH.admin.bookDetails.replace(':id', record.id.toString())}
+            >
+              <Button
+                type="text"
+                icon={<EyeOutlined />}
+                aria-label={`View ${record.title}`}
+              />
+            </Link>
           </Tooltip>
           <Tooltip title="Edit">
             <Link to={PATH.admin.editBook.replace(':id', record.id.toString())}>
@@ -107,7 +117,6 @@ const BookList = () => {
   ];
 
   const isSmallDevice = useMediaQuery({ maxWidth: 768 });
-
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [bookQueryParameters, setBookQueryParameters] = useState(
@@ -116,8 +125,7 @@ const BookList = () => {
 
   useEffect(() => {
     let isSetData = true;
-
-    getAllBooksService(
+    getPagedBooksService(
       bookQueryParameters.pageIndex,
       bookQueryParameters.pageSize
     )
@@ -131,10 +139,10 @@ const BookList = () => {
               };
             })
           );
-          setBookQueryParameters({
-            ...bookQueryParameters,
+          setBookQueryParameters((prev) => ({
+            ...prev,
             totalCount: response.data.totalRecords,
-          });
+          }));
         }
       })
       .catch((err) => {
@@ -146,19 +154,27 @@ const BookList = () => {
     return () => {
       isSetData = false;
     };
-  }, [
-    bookQueryParameters.pageIndex,
-    bookQueryParameters.pageSize,
-    bookQueryParameters.totalCount,
-  ]);
+  }, [bookQueryParameters.pageIndex, bookQueryParameters.pageSize]);
 
   const handleDeleteBook = (id: number) => {
     deleteBookService(id)
       .then(() => {
-        setBookQueryParameters({
-          ...bookQueryParameters,
-          totalCount: bookQueryParameters.totalCount - 1,
-        });
+        // Filter out the deleted book
+        setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+
+        // Update total count
+        setBookQueryParameters((prev) => ({
+          ...prev,
+          totalCount: prev.totalCount - 1,
+        }));
+
+        // If the current page would be empty after deletion, go to previous page
+        if (books.length === 1 && bookQueryParameters.pageIndex > 1) {
+          setBookQueryParameters((prev) => ({
+            ...prev,
+            pageIndex: prev.pageIndex - 1,
+          }));
+        }
       })
       .catch((err) => {
         message.error(err.message);
@@ -166,6 +182,7 @@ const BookList = () => {
   };
 
   const handleOnPageChange = (page: number, pageSize: number) => {
+    setIsLoading(true);
     setBookQueryParameters({
       ...bookQueryParameters,
       pageIndex: page,
@@ -174,6 +191,7 @@ const BookList = () => {
   };
 
   const handleOnPageSizeChange = (current: number, size: number) => {
+    setIsLoading(true);
     setBookQueryParameters({
       ...bookQueryParameters,
       pageIndex: current,
@@ -229,11 +247,18 @@ const BookList = () => {
                 style={{ marginBottom: 16 }}
                 actions={[
                   <Tooltip title="View details">
-                    <Button
-                      type="text"
-                      icon={<EyeOutlined />}
-                      aria-label={`View ${book.title}`}
-                    />
+                    <Link
+                      to={PATH.admin.bookDetails.replace(
+                        ':id',
+                        book.id.toString()
+                      )}
+                    >
+                      <Button
+                        type="text"
+                        icon={<EyeOutlined />}
+                        aria-label={`View ${book.title}`}
+                      />
+                    </Link>
                   </Tooltip>,
                   <Tooltip title="Edit">
                     <Link

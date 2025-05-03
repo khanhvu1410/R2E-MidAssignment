@@ -38,6 +38,12 @@ namespace LibraryManagement.Application.Services
             return addedCategory.ToCategoryToReturnDTO();
         }
 
+        public async Task<IEnumerable<CategoryToReturnDTO>> GetAllCategoriesAsync()
+        {
+            var categories = await _categoryRepository.GetAllAsync();
+            return categories.Select(c => c.ToCategoryToReturnDTO());
+        }
+
         public async Task DeleteCategoryAsync(int id)
         {
             var category = await _categoryRepository.GetByIdAsync(id);

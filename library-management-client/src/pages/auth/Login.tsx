@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import { LoginCredentials, UserRole } from '../../models/auth';
 import { loginService } from '../../api/authService';
-import { Button, Form, Input, message, Spin } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import Card from 'antd/es/card/Card';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { PATH } from '../../constants/paths';
