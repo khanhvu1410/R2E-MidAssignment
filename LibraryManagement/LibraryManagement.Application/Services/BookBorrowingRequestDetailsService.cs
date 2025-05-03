@@ -1,5 +1,6 @@
 ﻿using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
+using LibraryManagement.Application.Mappers;
 using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Interfaces;
 
@@ -21,9 +22,7 @@ namespace LibraryManagement.Application.Services
                 .Where(rd => rd.BookBorrowingRequestId == borrowingRequestId)
                 .Select(rd => new RequestDetailsToReturnDTO
                 {
-                    BookId = rd.BookId,
-                    BookName = rd.Book != null ? rd.Book.Title : string.Empty,
-                    BookQuantity = rd.Book != null ? rd.Book.Quantity : 0
+                    Book = rd.Book?.ToBookToReturnDTO()
                 });
         }
     }

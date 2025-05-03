@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/AuthContext';
-import { LoginCredentials, UserRole } from '../../models/auth';
-import { loginService } from '../../api/authService';
+import { useAuthContext } from '../context/AuthContext';
+import { LoginCredentials, UserRole } from '../models/auth';
+import { loginService } from '../api/authService';
 import { Button, Form, Input, message } from 'antd';
 import Card from 'antd/es/card/Card';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { PATH } from '../../constants/paths';
+import { PATH } from '../constants/paths';
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ const Login = () => {
       if (user?.role === UserRole.SuperUser) {
         navigate(PATH.admin.dashboard);
       } else if (user?.role === UserRole.NormalUser) {
-        navigate(PATH.auth.login);
+        navigate(PATH.user.books);
       }
     } catch (error) {
       message.error('Login failed. Please check your credentials.');

@@ -1,7 +1,5 @@
 import {
   Button,
-  Card,
-  List,
   message,
   Popconfirm,
   Space,
@@ -14,7 +12,6 @@ import { Category } from '../../models/category';
 import { Link } from 'react-router-dom';
 import { PATH } from '../../constants/paths';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { useMediaQuery } from 'react-responsive';
 import { useEffect, useState } from 'react';
 import {
   deleteCategoryService,
@@ -42,7 +39,7 @@ const CategoryList = () => {
       title: 'Actions',
       key: 'actions',
       align: 'center',
-      width: 150,
+      width: 125,
       fixed: 'right',
       render: (_, record) => (
         <Space size="middle">
@@ -77,7 +74,6 @@ const CategoryList = () => {
     },
   ];
 
-  const isSmallDevice = useMediaQuery({ maxWidth: 768 });
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categoryQueryParameters, setCategoryQueryParameters] = useState(
@@ -174,105 +170,40 @@ const CategoryList = () => {
         </Link>
       }
     >
-      <div>
-        {isLoading && (
-          <div
-            style={{
-              textAlign: 'center',
-              padding: 40,
-            }}
-          >
-            <Spin size="large" />
-          </div>
-        )}
+      {isLoading && (
+        <div
+          style={{
+            textAlign: 'center',
+            padding: 40,
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      )}
 
-        {isSmallDevice && !isLoading && (
-          <List
-            dataSource={categories}
-            pagination={{
-              pageSize: categoryQueryParameters.pageSize,
-              current: categoryQueryParameters.pageIndex,
-              total: categoryQueryParameters.totalCount,
-              showSizeChanger: true,
-              pageSizeOptions: [3, 5, 10],
-              showTotal: (total) => `Total ${total} categories`,
-              onChange: (page, pageSize) => {
-                handleOnPageChange(page, pageSize);
-              },
-              onShowSizeChange: (current, size) => {
-                handleOnPageSizeChange(current, size);
-              },
-            }}
-            renderItem={(category) => (
-              <Card
-                title={category.name}
-                size="small"
-                style={{ marginBottom: 16 }}
-                actions={[
-                  <Tooltip title="Edit">
-                    <Link
-                      to={PATH.admin.editCategory.replace(
-                        ':id',
-                        category.id.toString()
-                      )}
-                    >
-                      <Button
-                        type="text"
-                        icon={<EditOutlined />}
-                        onClick={() => category}
-                        aria-label={`Edit ${category.name}`}
-                      />
-                    </Link>
-                  </Tooltip>,
-                  <Tooltip title="Delete">
-                    <Popconfirm
-                      title="Are you sure to delete this book?"
-                      onConfirm={() => handleDeleteCategory(category.id)}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <Button
-                        danger
-                        type="text"
-                        icon={<DeleteOutlined />}
-                        aria-label={`Delete ${category.name}`}
-                      />
-                    </Popconfirm>
-                  </Tooltip>,
-                ]}
-              >
-                <p>
-                  <strong>Name:</strong> {category.name}
-                </p>
-              </Card>
-            )}
-          />
-        )}
-
-        {!isLoading && !isSmallDevice && (
-          <Table<Category>
-            columns={columns}
-            dataSource={categories}
-            scroll={{ x: 'max-content' }}
-            size="middle"
-            bordered
-            pagination={{
-              pageSize: categoryQueryParameters.pageSize,
-              current: categoryQueryParameters.pageIndex,
-              total: categoryQueryParameters.totalCount,
-              showSizeChanger: true,
-              pageSizeOptions: [3, 5, 10],
-              showTotal: (total) => `Total ${total} categories`,
-              onChange: (page, pageSize) => {
-                handleOnPageChange(page, pageSize);
-              },
-              onShowSizeChange: (current, size) => {
-                handleOnPageSizeChange(current, size);
-              },
-            }}
-          />
-        )}
-      </div>
+      {!isLoading && (
+        <Table<Category>
+          columns={columns}
+          dataSource={categories}
+          scroll={{ x: 'max-content' }}
+          size="middle"
+          bordered
+          pagination={{
+            pageSize: categoryQueryParameters.pageSize,
+            current: categoryQueryParameters.pageIndex,
+            total: categoryQueryParameters.totalCount,
+            showSizeChanger: true,
+            pageSizeOptions: [3, 5, 10],
+            showTotal: (total) => `Total ${total} categories`,
+            onChange: (page, pageSize) => {
+              handleOnPageChange(page, pageSize);
+            },
+            onShowSizeChange: (current, size) => {
+              handleOnPageSizeChange(current, size);
+            },
+          }}
+        />
+      )}
     </BodyLayout>
   );
 };

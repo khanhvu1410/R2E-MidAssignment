@@ -22,4 +22,14 @@ export const ENDPOINT_API = {
     delete: '/categories/:id',
     update: '/categories/:id',
   },
+  borrowingRequest: {
+    getPaged: '/bookBorrowingRequests?pageIndex=:pageIndex&pageSize=:pageSize',
+    create: '/bookBorrowingRequests',
+    getThisMonth: '/bookBorrowingRequests/thisMonth',
+    getByRequestorId:
+      '/bookBorrowingRequests/getByRequestorId?pageIndex=:pageIndex&pageSize=:pageSize',
+  },
+  requestDetails: {
+    getByBorrowingRequestId: '/bookBorrowingRequestDetails/:borrowingRequestId',
+  },
 };

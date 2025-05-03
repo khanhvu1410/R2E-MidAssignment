@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using LibraryManagement.Application.Common;
 using LibraryManagement.Application.DTOs.BorrowingRequest;
 using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
@@ -28,12 +29,12 @@ namespace LibraryManagement.API.Controllers
             return CreatedAtAction(nameof(GetBookBorrowingRequestById), new { id = addedBookBorrowingRequest.Id }, addedBookBorrowingRequest);
         }
 
-        [HttpGet("All")]
+        [HttpGet]
         [Authorize(Roles = "SuperUser")]
-        public async Task<ActionResult<IEnumerable<BorrowingRequestToReturnDTO>>> GetAllBookBorrowingRequests()
+        public async Task<ActionResult<PagedResponse<BorrowingRequestToReturnDTO>>> GetBookBorrowingRequests(int pageIndex, int pageSize)
         {
-            var bookBorrowingRequests = await _bookBorrowingRequestService.GetAllBookBorrowingRequestsAsync();
-            return Ok(bookBorrowingRequests);
+            var pagedResponse = await _bookBorrowingRequestService.GetBookBorrowingRequestsPaginatedAsync(pageIndex, pageSize);
+            return Ok(pagedResponse);
         }
 
         [HttpGet("{id}")]
@@ -44,13 +45,22 @@ namespace LibraryManagement.API.Controllers
             return Ok(bookBorrowingRequest);
         }
 
-        [HttpGet("GetByRequestorId")]
+        [HttpGet("ThisMonth")]
         [Authorize(Roles = "NormalUser")]
-        public async Task<ActionResult<IEnumerable<BorrowingRequestToReturnDTO>>> GetBorrowingRequestsByRequestorId()
+        public async Task<ActionResult<IEnumerable<BorrowingRequestToReturnDTO>>> GetBorrowingRequestsThisMonth()
         {
             var requestorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
-            var borrowingRequests = await _bookBorrowingRequestService.GetBorrowingRequestsByRequestorId(requestorId);
+            var borrowingRequests = await _bookBorrowingRequestService.GetBookBorrowingRequestsThisMonthAsync(requestorId);
             return Ok(borrowingRequests);
+        }
+
+        [HttpGet("GetByRequestorId")]
+        [Authorize(Roles = "NormalUser")]
+        public async Task<ActionResult<PagedResponse<BorrowingRequestToReturnDTO>>> GetBorrowingRequestsByRequestorId(int pageIndex, int pageSize)
+        {
+            var requestorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
+            var pagedResponse = await _bookBorrowingRequestService.GetBorrowingRequestsByRequestorId(pageIndex, pageSize, requestorId);
+            return Ok(pagedResponse);
         }
 
         [HttpPatch("{id}")]

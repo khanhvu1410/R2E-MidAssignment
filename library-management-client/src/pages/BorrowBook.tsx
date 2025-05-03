@@ -1,18 +1,18 @@
 import { Layout } from 'antd';
-import CustomHeader from '../../components/layout/CustomHeader';
-import SideBar from '../../components/layout/SideBar';
+import CustomHeader from '../components/layout/CustomHeader';
+import UserSideBar from '../components/layout/UserSideBar';
 import { Outlet } from 'react-router-dom';
 
-const ManageBook = () => {
+const BorrowBook = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <CustomHeader />
       <Layout>
-        <SideBar />
+        <UserSideBar />
         <Outlet />
       </Layout>
     </Layout>
   );
 };
 
-export default ManageBook;
+export default BorrowBook;
