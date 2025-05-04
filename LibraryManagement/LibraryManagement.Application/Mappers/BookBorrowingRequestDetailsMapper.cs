@@ -3,7 +3,7 @@ using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers
 {
-    internal static class BookBorrowingRequestDetailsMapper
+    public static class BookBorrowingRequestDetailsMapper
     {
         public static RequestDetailsToAddDTO ToBookBorrowingRequestDetailsDTO(this BookBorrowingRequestDetails bookBorrowingRequestDetails)
         {

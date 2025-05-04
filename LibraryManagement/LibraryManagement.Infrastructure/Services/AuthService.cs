@@ -8,7 +8,7 @@ using LibraryManagement.Domain.Exceptions;
 using LibraryManagement.Domain.Interfaces;
 using LibraryManagement.Infrastructure.Helpers;
 
-namespace LibraryManagement.Application.Services
+namespace LibraryManagement.Infrastructure.Services
 {
     public class AuthService : IAuthService
     {
