@@ -21,9 +21,10 @@ const EditCategory = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [form] = Form.useForm();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     getCategoryByIdService(parseInt(id ?? '0'))
       .then((response) => {
         form.setFieldsValue(response.data);

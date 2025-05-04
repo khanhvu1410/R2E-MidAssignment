@@ -33,9 +33,10 @@ const EditBook = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     getAllCategoriesService()
       .then((response) => {
         setCategories(response.data);

@@ -1,33 +1,36 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import { LoginCredentials, UserRole } from '../models/auth';
 import { loginService } from '../api/authService';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Divider, Form, Input, message } from 'antd';
 import Card from 'antd/es/card/Card';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { PATH } from '../constants/paths';
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuthContext();
 
-  const onFinish = async (values: LoginCredentials) => {
-    try {
-      setLoading(true);
-      const { user, accessToken } = await loginService(values);
-      login(user, accessToken);
-      if (user?.role === UserRole.SuperUser) {
-        navigate(PATH.admin.dashboard);
-      } else if (user?.role === UserRole.NormalUser) {
-        navigate(PATH.user.books);
-      }
-    } catch (error) {
-      message.error('Login failed. Please check your credentials.');
-    } finally {
-      setLoading(false);
-    }
+  const onFinish = (values: LoginCredentials) => {
+    setIsLoading(true);
+    loginService(values)
+      .then((response) => {
+        const { user, accessToken } = response.data;
+        login(user, accessToken);
+        if (user?.role === UserRole.SuperUser) {
+          navigate(PATH.admin.dashboard);
+        } else if (user?.role === UserRole.NormalUser) {
+          navigate(PATH.user.books);
+        }
+      })
+      .catch(() => {
+        message.error('Login failed! The username or password is incorrect.');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -54,11 +57,20 @@ const Login = () => {
             <Input.Password prefix={<LockOutlined />} placeholder="Password" />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading} block>
+            <Button type="primary" htmlType="submit" loading={isLoading} block>
               Login
             </Button>
           </Form.Item>
         </Form>
+
+        <Divider />
+
+        <Link
+          to={PATH.auth.register}
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <Button type="link">Need an account? Register</Button>
+        </Link>
       </Card>
     </div>
   );

@@ -64,11 +64,12 @@ const RequestDetailsList = () => {
 
   const { id } = useParams();
   const [books, setBooks] = useState<Book[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [form] = useForm();
   const navigate = useNavigate();
 
   useEffect(() => {
+    setIsLoading(true);
     getRequestDetailsByBorrowingRequestId(parseInt(id ?? '0'))
       .then((response) => {
         setBooks(
