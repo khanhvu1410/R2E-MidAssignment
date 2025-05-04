@@ -3,7 +3,7 @@ using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers
 {
-    internal static class BookMapper
+    public static class BookMapper
     {
         public static BookToReturnDTO ToBookToReturnDTO(this Book book)
         {

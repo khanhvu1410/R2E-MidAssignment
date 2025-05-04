@@ -1,6 +1,6 @@
 ﻿using LibraryManagement.Domain.Entities;
 
-namespace LibraryManagement.Domain.Interfaces
+namespace LibraryManagement.Application.Interfaces
 {
     public interface ITokenService
     {

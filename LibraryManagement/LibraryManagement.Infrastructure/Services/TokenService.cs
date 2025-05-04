@@ -1,8 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Domain.Entities;
-using LibraryManagement.Domain.Interfaces;
 using LibraryManagement.Infrastructure.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

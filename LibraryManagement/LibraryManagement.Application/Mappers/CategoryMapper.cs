@@ -3,7 +3,7 @@ using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers
 {
-    internal static class CategoryMapper
+    public static class CategoryMapper
     {
         public static CategoryToReturnDTO ToCategoryToReturnDTO(this Category category)
         {
