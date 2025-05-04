@@ -26,7 +26,7 @@ namespace LibraryManagement.Application.Validators
                 .WithMessage($"Publication year must be between 1800 and {DateTime.UtcNow.Year}.");
 
             RuleFor(b => b.Quantity)
-                .NotEmpty().WithMessage("Quantity is required.");
+                .NotNull().WithMessage("Quantity is required.");
 
             RuleFor(b => b.CategoryId)
                 .NotNull().WithMessage("Category ID is required.")

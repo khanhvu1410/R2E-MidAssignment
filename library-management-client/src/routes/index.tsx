@@ -13,9 +13,10 @@ import CreateCategory from '../components/category/CreateCategory';
 import EditCategory from '../components/category/EditCategory';
 import BorrowBook from '../pages/BorrowBook';
 import UserBookList from '../components/book/UserBookList';
-import UserBorrowingRequests from '../components/borrowingRequest/UserBorrowingRequests';
+import UserRequestList from '../components/borrowingRequest/UserRequestList';
 import RequestDetailsList from '../components/requestDetails/RequestDetailsList';
 import NotFound from '../pages/NotFound';
+import AdminRequestList from '../components/borrowingRequest/AdminRequestList';
 
 export const AppRoutes = [
   {
@@ -41,6 +42,8 @@ export const AppRoutes = [
       { path: PATH.admin.categories, element: <CategoryList /> },
       { path: PATH.admin.createCategory, element: <CreateCategory /> },
       { path: PATH.admin.editCategory, element: <EditCategory /> },
+      { path: PATH.admin.borrowingRequests, element: <AdminRequestList /> },
+      { path: PATH.admin.requestDetails, element: <RequestDetailsList /> },
     ],
   },
   {
@@ -52,7 +55,7 @@ export const AppRoutes = [
     children: [
       { path: PATH.user.books, element: <UserBookList /> },
       { path: PATH.user.bookDetails, element: <BookDetails /> },
-      { path: PATH.user.borrowingRequests, element: <UserBorrowingRequests /> },
+      { path: PATH.user.borrowingRequests, element: <UserRequestList /> },
       { path: PATH.user.requestDetails, element: <RequestDetailsList /> },
     ],
   },

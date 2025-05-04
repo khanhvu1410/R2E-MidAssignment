@@ -10,4 +10,10 @@ export interface BorrowingRequest {
   status: RequestStatus;
   requestorId: number;
   approverId: number;
+  requestorUsername: string | null;
+  approverUsername: string | null;
+}
+
+export interface BorrowingRequestToUpdate {
+  status: RequestStatus;
 }
