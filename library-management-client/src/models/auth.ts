@@ -16,5 +16,5 @@ export interface LoginCredentials {
 
 export interface RegisterData extends LoginCredentials {
   email: string;
-  role: UserRole;
+  role?: UserRole;
 }

@@ -17,6 +17,7 @@ import UserRequestList from '../components/borrowingRequest/UserRequestList';
 import RequestDetailsList from '../components/requestDetails/RequestDetailsList';
 import NotFound from '../pages/NotFound';
 import AdminRequestList from '../components/borrowingRequest/AdminRequestList';
+import Register from '../pages/Register';
 
 export const AppRoutes = [
   {
@@ -26,6 +27,10 @@ export const AppRoutes = [
   {
     path: PATH.auth.login,
     element: <Login />,
+  },
+  {
+    path: PATH.auth.register,
+    element: <Register />,
   },
   {
     element: (
