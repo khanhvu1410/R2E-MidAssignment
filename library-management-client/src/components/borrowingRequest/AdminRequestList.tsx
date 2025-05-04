@@ -1,11 +1,20 @@
-import { DateTime } from 'luxon';
-import { Button, message, Space, Spin, Table, TableProps, Tooltip } from 'antd';
+import {
+  Button,
+  message,
+  Space,
+  Spin,
+  Table,
+  TableProps,
+  Tag,
+  Tooltip,
+} from 'antd';
 import { BorrowingRequest } from '../../models/borrowingRequest';
 import { Link } from 'react-router-dom';
 import { EyeOutlined } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
 import { PATH } from '../../constants/paths';
-import { getBorrowingRequestsByRequestorId } from '../../api/borrowingRequestService';
+import { useEffect, useState } from 'react';
+import { getPagedBorrowingRequestsService } from '../../api/borrowingRequestService';
+import { DateTime } from 'luxon';
 import BodyLayout from '../layout/BodyLayout';
 
 const defaultQueryParameters = {
@@ -15,7 +24,7 @@ const defaultQueryParameters = {
   search: '',
 };
 
-const UserBorrowingRequests = () => {
+const AdminRequestList = () => {
   const breadcrumbItems = [{ title: 'Borrowing Request' }];
 
   const columns: TableProps<BorrowingRequest>['columns'] = [
@@ -25,10 +34,40 @@ const UserBorrowingRequests = () => {
       key: 'requestedDate',
     },
     {
+      title: 'Requestor',
+      dataIndex: 'requestorUsername',
+      key: 'requestorUsername',
+    },
+    {
+      title: 'Approver',
+      dataIndex: 'approverUsername',
+      key: 'approverUsername',
+    },
+    {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
       align: 'center',
+      render: (status: number) => {
+        let statusText = '';
+        let color = '';
+
+        switch (status) {
+          case 0:
+            statusText = 'Approved';
+            color = 'green';
+            break;
+          case 1:
+            statusText = 'Rejected';
+            color = 'red';
+            break;
+          case 2:
+            statusText = 'Waiting';
+            color = 'orange';
+            break;
+        }
+        return <Tag color={color}>{statusText}</Tag>;
+      },
     },
     {
       title: 'Actions',
@@ -40,7 +79,10 @@ const UserBorrowingRequests = () => {
         <Space size="middle">
           <Tooltip title="View details">
             <Link
-              to={PATH.user.requestDetails.replace(':id', record.id.toString())}
+              to={PATH.admin.requestDetails.replace(
+                ':id',
+                record.id.toString()
+              )}
             >
               <Button
                 type="text"
@@ -63,7 +105,7 @@ const UserBorrowingRequests = () => {
 
   useEffect(() => {
     let isSetData = true;
-    getBorrowingRequestsByRequestorId(
+    getPagedBorrowingRequestsService(
       borrowingRequestQueryParameters.pageIndex,
       borrowingRequestQueryParameters.pageSize
     )
@@ -162,4 +204,4 @@ const UserBorrowingRequests = () => {
   );
 };
 
-export default UserBorrowingRequests;
+export default AdminRequestList;

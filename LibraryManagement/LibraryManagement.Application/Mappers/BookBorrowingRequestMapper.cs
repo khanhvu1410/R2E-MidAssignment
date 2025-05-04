@@ -12,6 +12,8 @@ namespace LibraryManagement.Application.Mappers
                 Id = bookBorrowingRequest.Id,
                 RequestorId = bookBorrowingRequest.RequestorId,
                 ApproverId = bookBorrowingRequest.ApproverId,
+                RequestorUsername = bookBorrowingRequest.Requestor?.Username,
+                ApproverUsername = bookBorrowingRequest.Approver?.Username,
                 RequestedDate = bookBorrowingRequest.RequestedDate,
                 Status = bookBorrowingRequest.Status
             };

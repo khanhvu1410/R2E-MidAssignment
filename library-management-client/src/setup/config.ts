@@ -28,6 +28,8 @@ export const ENDPOINT_API = {
     getThisMonth: '/bookBorrowingRequests/thisMonth',
     getByRequestorId:
       '/bookBorrowingRequests/getByRequestorId?pageIndex=:pageIndex&pageSize=:pageSize',
+    getById: '/bookBorrowingRequests/:id',
+    update: '/bookBorrowingRequests/:id',
   },
   requestDetails: {
     getByBorrowingRequestId: '/bookBorrowingRequestDetails/:borrowingRequestId',

@@ -12,6 +12,8 @@ export const PATH = {
     categories: '/admin/categories',
     createCategory: '/admin/categories/create',
     editCategory: '/admin/categories/:id/edit',
+    borrowingRequests: '/admin/borrowingRequests',
+    requestDetails: '/admin/borrowingRequests/:id/details',
   },
   user: {
     books: '/books',

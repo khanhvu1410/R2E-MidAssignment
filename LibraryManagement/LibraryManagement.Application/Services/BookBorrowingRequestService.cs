@@ -1,5 +1,4 @@
 ﻿using LibraryManagement.Application.Common;
-using LibraryManagement.Application.DTOs.Book;
 using LibraryManagement.Application.DTOs.BorrowingRequest;
 using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
@@ -8,7 +7,6 @@ using LibraryManagement.Domain.Entities;
 using LibraryManagement.Domain.Enums;
 using LibraryManagement.Domain.Exceptions;
 using LibraryManagement.Domain.Interfaces;
-using LibraryManagement.Domain.Models;
 
 namespace LibraryManagement.Application.Services
 {
@@ -103,10 +101,12 @@ namespace LibraryManagement.Application.Services
 
         public async Task<PagedResponse<BorrowingRequestToReturnDTO>> GetBookBorrowingRequestsPaginatedAsync(int pageIndex, int pageSize)
         {
-            var pagedResult = await _bookBorrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, null);
+            var pagedResult = await _bookBorrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, null, br => br.Approver, br => br.Requestor);
             var pagedResponse = new PagedResponse<BorrowingRequestToReturnDTO>
             {
-                Items = pagedResult.Items?.Select(br => br.ToBookBorrowingRequestToReturnDTO()).ToList(),
+                Items = pagedResult.Items?
+                    .Select(br => br.ToBookBorrowingRequestToReturnDTO())
+                    .ToList(),
                 PageIndex = pagedResult.PageIndex,
                 PageSize = pagedResult.PageSize,
                 TotalRecords = pagedResult.TotalRecords,

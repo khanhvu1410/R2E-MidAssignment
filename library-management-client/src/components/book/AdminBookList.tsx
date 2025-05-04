@@ -9,6 +9,7 @@ import {
   Spin,
   Table,
   TableProps,
+  Tag,
   Tooltip,
 } from 'antd';
 import {
@@ -57,16 +58,25 @@ const AdminBookList = () => {
       align: 'center',
     },
     {
+      title: 'Category',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
+      align: 'center',
+    },
+    {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
       align: 'center',
-    },
-    {
-      title: 'Category Name',
-      dataIndex: 'categoryName',
-      key: 'categoryName',
-      align: 'center',
+      render: (quantity: number) => {
+        let color = '';
+        if (quantity > 0) {
+          color = 'green';
+        } else {
+          color = 'red';
+        }
+        return <Tag color={color}>{quantity}</Tag>;
+      },
     },
     {
       title: 'Actions',

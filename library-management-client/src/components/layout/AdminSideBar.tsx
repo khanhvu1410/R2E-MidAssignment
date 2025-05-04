@@ -28,7 +28,7 @@ const AdminSideBar = () => {
       icon: TagOutlined,
     },
     {
-      key: 'test',
+      key: PATH.admin.borrowingRequests,
       label: 'Borrowing Requests',
       icon: ShoppingCartOutlined,
     },

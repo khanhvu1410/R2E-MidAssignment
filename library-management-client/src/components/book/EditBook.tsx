@@ -47,6 +47,7 @@ const EditBook = () => {
         setIsLoading(false);
       });
 
+    setIsLoading(true);
     getBookByIdService(parseInt(id ?? '0'))
       .then((response) => {
         form.setFieldsValue(response.data);
@@ -54,16 +55,23 @@ const EditBook = () => {
       })
       .catch((error) => {
         message.error(error.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [form, id]);
 
   const onFinish: FormProps<Book>['onFinish'] = (values) => {
+    setIsLoading(true);
     updateBookService(values, parseInt(id ?? '0'))
       .then(() => {
-        navigate(PATH.admin.categories);
+        navigate(PATH.admin.books);
       })
       .catch((error) => {
         message.error(error.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
