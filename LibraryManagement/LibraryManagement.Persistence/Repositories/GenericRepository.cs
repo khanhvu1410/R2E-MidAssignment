@@ -35,7 +35,7 @@ namespace LibraryManagement.Persistence.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
+        public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, object?>>[] includes)
         {
             var query = _dbSet.AsQueryable();
             foreach (var include in includes)

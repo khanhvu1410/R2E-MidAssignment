@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.API.Middlewares
 {
-    internal class ExceptionHandlingMiddleware
+    public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
