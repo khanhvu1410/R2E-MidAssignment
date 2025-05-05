@@ -16,7 +16,7 @@ namespace LibraryManagement.Application.Tests.Services
     internal class BookServiceTests
     {
         private Mock<IGenericRepository<Book>> _mockBookRepository;
-        private Mock<IGenericRepository<BookBorrowingRequestDetails>> _mockBookBorrowingRequestDetails;
+        private Mock<IGenericRepository<BookBorrowingRequestDetails>> _mockRequestDetailsRepository;
         private Mock<IValidator<BookToAddDTO>> _mockBookToAddDTOValidator;
         private Mock<IValidator<BookToUpdateDTO>> _mockBookToUpdateDTOValidator;
         private BookService _bookService;
@@ -25,13 +25,13 @@ namespace LibraryManagement.Application.Tests.Services
         public void Setup()
         {
             _mockBookRepository = new Mock<IGenericRepository<Book>>();
-            _mockBookBorrowingRequestDetails = new Mock<IGenericRepository<BookBorrowingRequestDetails>>();
+            _mockRequestDetailsRepository = new Mock<IGenericRepository<BookBorrowingRequestDetails>>();
             _mockBookToAddDTOValidator = new Mock<IValidator<BookToAddDTO>>();
             _mockBookToUpdateDTOValidator = new Mock<IValidator<BookToUpdateDTO>>();
 
             _bookService = new BookService(
                 _mockBookRepository.Object,
-                _mockBookBorrowingRequestDetails.Object,
+                _mockRequestDetailsRepository.Object,
                 _mockBookToAddDTOValidator.Object,
                 _mockBookToUpdateDTOValidator.Object
             );
@@ -66,10 +66,13 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _bookService.AddBookAsync(bookToAdd);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(expectedBook.Id));
-            Assert.That(result.Title, Is.EqualTo(expectedBook.Title));
+            // Assert            
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Id, Is.EqualTo(expectedBook.Id));
+                Assert.That(result.Title, Is.EqualTo(expectedBook.Title));
+            });
             _mockBookToAddDTOValidator.Verify(v => v.ValidateAsync(bookToAdd, default), Times.Once);
             _mockBookRepository.Verify(r => r.AddAsync(It.IsAny<Book>()), Times.Once);
         }
@@ -109,7 +112,7 @@ namespace LibraryManagement.Application.Tests.Services
             _mockBookRepository.Setup(r => r.GetByIdAsync(bookId))
                 .ReturnsAsync(existingBook);
 
-            _mockBookBorrowingRequestDetails.Setup(r => r.ExistsAsync(rd => rd.BookId == bookId))
+            _mockRequestDetailsRepository.Setup(r => r.ExistsAsync(rd => rd.BookId == bookId))
                 .ReturnsAsync(false);
 
             // Act
@@ -143,7 +146,7 @@ namespace LibraryManagement.Application.Tests.Services
             _mockBookRepository.Setup(r => r.GetByIdAsync(bookId))
                 .ReturnsAsync(existingBook);
 
-            _mockBookBorrowingRequestDetails.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<BookBorrowingRequestDetails, bool>>>()))
+            _mockRequestDetailsRepository.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<BookBorrowingRequestDetails, bool>>>()))
                 .ReturnsAsync(true);
 
             // Act & Assert
@@ -172,19 +175,23 @@ namespace LibraryManagement.Application.Tests.Services
 
             var pagedResult = new PagedResult<Book>(books, pageIndex, pageSize, totalRecords);
            
-            _mockBookRepository.Setup(r => r.GetPagedAsync(pageIndex, pageSize, null, It.IsAny<Expression<Func<Book, object>>>()))
+            _mockBookRepository.Setup(r => r.GetPagedAsync(pageIndex, pageSize, null, It.IsAny<Expression<Func<Book, object?>>>()))
                 .ReturnsAsync(pagedResult);
 
             // Act
             var result = await _bookService.GetBooksPaginatedAsync(pageIndex, pageSize);
 
             // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
-            Assert.That(result.PageSize, Is.EqualTo(pageSize));
-            Assert.That(result.Items?.Count(), Is.EqualTo(2));
-            Assert.That(result.Items.ElementAt(0).Title, Is.EqualTo("Book 1"));
-            Assert.That(result.Items.ElementAt(0).CategoryName, Is.EqualTo("Fiction"));
+            
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
+                Assert.That(result.PageSize, Is.EqualTo(pageSize));
+                Assert.That(result.Items.Count(), Is.EqualTo(2));
+                Assert.That(result.Items.ElementAt(0).Title, Is.EqualTo("Book 1"));
+                Assert.That(result.Items.ElementAt(0).CategoryName, Is.EqualTo("Fiction"));
+            });
         }
 
         #endregion
@@ -209,11 +216,14 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _bookService.GetBookByIdAsync(bookId);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(bookId));
-            Assert.That(result.Title, Is.EqualTo("Test Book"));
-            Assert.That(result.CategoryName, Is.EqualTo("Fiction"));
+            // Assert           
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Id, Is.EqualTo(bookId));
+                Assert.That(result.Title, Is.EqualTo("Test Book"));
+                Assert.That(result.CategoryName, Is.EqualTo("Fiction"));
+            });
         }
 
         [Test]
@@ -246,7 +256,7 @@ namespace LibraryManagement.Application.Tests.Services
                 PublicationYear = 2023,
                 Description = "Updated Description",
                 Quantity = 3,
-                CategoryId = 2
+                CategoryId = 2,              
             };
 
             var validationResult = new ValidationResult();
@@ -263,11 +273,18 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _bookService.UpdateBookAsync(bookId, bookToUpdate);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(bookId));
-            Assert.That(result.Title, Is.EqualTo("Updated Title"));
-            Assert.That(result.Author, Is.EqualTo("Updated Author"));
+            // Assert          
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Id, Is.EqualTo(bookId));
+                Assert.That(result.Title, Is.EqualTo("Updated Title"));
+                Assert.That(result.Author, Is.EqualTo("Updated Author"));
+                Assert.That(result.PublicationYear, Is.EqualTo(2023));
+                Assert.That(result.Description, Is.EqualTo("Updated Description"));
+                Assert.That(result.Quantity, Is.EqualTo(3));
+                Assert.That(result.CategoryId, Is.EqualTo(2));
+            });
             _mockBookToUpdateDTOValidator.Verify(v => v.ValidateAsync(bookToUpdate, default), Times.Once);
             _mockBookRepository.Verify(r => r.UpdateAsync(It.IsAny<Book>()), Times.Once);
         }

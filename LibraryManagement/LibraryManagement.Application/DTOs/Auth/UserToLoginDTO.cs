@@ -2,8 +2,8 @@
 {
     public class UserToLoginDTO
     {
-        public string? Username { get; set; }
+        public string Username { get; set; } = default!;
 
-        public required string Password { get; set; }
+        public string Password { get; set; } = default!;
     }
 }

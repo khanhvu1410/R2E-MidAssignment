@@ -4,11 +4,11 @@ namespace LibraryManagement.Application.DTOs.Book
 {
     public class BookToAddDTO
     {
-        public string? Title { get; set; }
+        public string Title { get; set; } = default!;
 
-        public string? Author { get; set; }
+        public string Author { get; set; } = default!;
 
-        public string? ISBN { get; set; }
+        public string ISBN { get; set; } = default!;
 
         public int PublicationYear { get; set; }
 

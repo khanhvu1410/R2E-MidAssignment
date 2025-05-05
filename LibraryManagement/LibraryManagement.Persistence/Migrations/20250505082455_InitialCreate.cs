@@ -50,8 +50,8 @@ namespace LibraryManagement.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Author = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    ISBN = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: true),
+                    Author = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ISBN = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     PublicationYear = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
@@ -146,7 +146,17 @@ namespace LibraryManagement.Persistence.Migrations
                     { 7, "Anne Frank", 4, "The poignant and powerful diary of a Jewish girl hiding from the Nazis during World War II.", "9780553296983", 1947, 10, "The Diary of a Young Girl" },
                     { 8, "Walter Isaacson", 4, "The authorized biography of Apple's visionary co-founder, revealing his genius, creativity, and complex personality.", "9781451648539", 2011, 10, "Steve Jobs" },
                     { 9, "E.B. White", 5, "A heartwarming tale of friendship between a pig named Wilbur and a clever spider named Charlotte.", "9780061124952", 1952, 10, "Charlotte's Web" },
-                    { 10, "Dr. Seuss", 5, "A whimsical and rhyming story about a mischievous cat who turns a rainy day into an unforgettable adventure.", "9780394800011", 1957, 10, "The Cat in the Hat" }
+                    { 10, "Dr. Seuss", 5, "A whimsical and rhyming story about a mischievous cat who turns a rainy day into an unforgettable adventure.", "9780394800011", 1957, 10, "The Cat in the Hat" },
+                    { 11, "F. Scott Fitzgerald", 1, "A portrait of the Jazz Age through the tragic story of the mysterious millionaire Jay Gatsby and his love for Daisy Buchanan.", "9780743273565", 1925, 8, "The Great Gatsby" },
+                    { 12, "Frank Herbert", 1, "A science fiction epic about politics, religion, and power on the desert planet Arrakis, home to the valuable spice melange.", "9780441172719", 1965, 7, "Dune" },
+                    { 13, "Carl Sagan", 2, "A journey through the universe exploring astronomy, biology, and the history of science, connecting humanity to the cosmos.", "9780345539434", 1980, 6, "Cosmos" },
+                    { 14, "Siddhartha Mukherjee", 2, "A comprehensive history of genetics, from its discovery to modern breakthroughs and ethical dilemmas.", "9781476733500", 2016, 5, "The Gene: An Intimate History" },
+                    { 15, "Yuval Noah Harari", 3, "Explores the history of Homo sapiens from the Stone Age to the 21st century, examining key revolutions in human development.", "9780062316097", 2011, 9, "Sapiens: A Brief History of Humankind" },
+                    { 16, "Peter Frankopan", 3, "Reinterprets world history with Asia and the Silk Road trade routes at the center of global exchange and power.", "9781408839997", 2015, 4, "The Silk Roads: A New History of the World" },
+                    { 17, "Michelle Obama", 4, "An intimate memoir by the former First Lady, chronicering her journey from Chicago's South Side to the White House.", "9781524763138", 2018, 7, "Becoming" },
+                    { 18, "Tara Westover", 4, "A memoir about a woman who leaves her survivalist family and goes on to earn a PhD from Cambridge University.", "9780399590504", 2018, 6, "Educated" },
+                    { 19, "J.K. Rowling", 5, "The first book in the Harry Potter series, following a young boy's discovery of his magical heritage at Hogwarts School.", "9780590353427", 1997, 10, "Harry Potter and the Sorcerer's Stone" },
+                    { 20, "Maurice Sendak", 5, "A classic picture book about Max's imaginative journey to the land of the Wild Things, where he becomes king.", "9780060254926", 1963, 8, "Where the Wild Things Are" }
                 });
 
             migrationBuilder.CreateIndex(

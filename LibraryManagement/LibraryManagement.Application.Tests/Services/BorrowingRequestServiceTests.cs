@@ -13,12 +13,12 @@ using Moq;
 namespace LibraryManagement.Application.Tests.Services
 {
     [TestFixture]
-    internal class BookBorrowingRequestServiceTests
+    internal class BorrowingRequestServiceTests
     {
         private Mock<IGenericRepository<BookBorrowingRequest>> _mockRequestRepository;
         private Mock<IGenericRepository<BookBorrowingRequestDetails>> _mockRequestDetailsRepository;
         private Mock<IGenericRepository<Book>> _mockBookRepository;
-        private BookBorrowingRequestService _requestService;
+        private BorrowingRequestService _requestService;
 
         [SetUp]
         public void Setup()
@@ -27,7 +27,7 @@ namespace LibraryManagement.Application.Tests.Services
             _mockRequestDetailsRepository = new Mock<IGenericRepository<BookBorrowingRequestDetails>>();
             _mockBookRepository = new Mock<IGenericRepository<Book>>();
 
-            _requestService = new BookBorrowingRequestService(
+            _requestService = new BorrowingRequestService(
                 _mockRequestRepository.Object,
                 _mockRequestDetailsRepository.Object,
                 _mockBookRepository.Object
@@ -69,11 +69,14 @@ namespace LibraryManagement.Application.Tests.Services
                 .ReturnsAsync((BookBorrowingRequest r) => { r.Id = 1; return r; });
 
             // Act
-            var result = await _requestService.AddBookBorrowingRequestAsync(requestorId, requestDetails);
+            var result = await _requestService.AddBorrowingRequestAsync(requestorId, requestDetails);
 
             // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Status, Is.EqualTo(RequestStatus.Waiting));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Status, Is.EqualTo(RequestStatus.Waiting));
+            });
             _mockRequestRepository.Verify(r => r.AddAsync(It.IsAny<BookBorrowingRequest>()), Times.Once);
             _mockRequestDetailsRepository.Verify(r => r.AddAsync(It.IsAny<BookBorrowingRequestDetails>()), Times.Exactly(2));
             _mockBookRepository.Verify(r => r.UpdateAsync(It.IsAny<Book>()), Times.Exactly(2));
@@ -104,7 +107,7 @@ namespace LibraryManagement.Application.Tests.Services
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<BadRequestException>(() =>
-                _requestService.AddBookBorrowingRequestAsync(requestorId, requestDetails));
+                _requestService.AddBorrowingRequestAsync(requestorId, requestDetails));
             Assert.That(ex.Message, Is.EqualTo("Maximum 3 borrowing requests per month."));
         }
 
@@ -128,7 +131,7 @@ namespace LibraryManagement.Application.Tests.Services
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<BadRequestException>(() =>
-                _requestService.AddBookBorrowingRequestAsync(requestorId, requestDetails));
+                _requestService.AddBorrowingRequestAsync(requestorId, requestDetails));
             Assert.That(ex.Message, Is.EqualTo("Maximum 5 books can be requested at a time."));
         }
 
@@ -153,7 +156,7 @@ namespace LibraryManagement.Application.Tests.Services
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<NotFoundException>(() =>
-                _requestService.AddBookBorrowingRequestAsync(requestorId, requestDetails));
+                _requestService.AddBorrowingRequestAsync(requestorId, requestDetails));
             Assert.That(ex.Message, Is.EqualTo("Book with ID 99 not found."));
         }
 
@@ -180,7 +183,7 @@ namespace LibraryManagement.Application.Tests.Services
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<BadRequestException>(() =>
-                _requestService.AddBookBorrowingRequestAsync(requestorId, requestDetails));
+                _requestService.AddBorrowingRequestAsync(requestorId, requestDetails));
             Assert.That(ex.Message, Is.EqualTo("Book with ID 1 is unavailable."));
         }
 
@@ -205,19 +208,22 @@ namespace LibraryManagement.Application.Tests.Services
 
             _mockRequestRepository.Setup(r => r.GetPagedAsync(
                     pageIndex, pageSize, null,
-                    It.IsAny<Expression<Func<BookBorrowingRequest, object>>>(),
-                    It.IsAny< Expression<Func<BookBorrowingRequest, object>>>()))
+                    It.IsAny<Expression<Func<BookBorrowingRequest, object?>>>(),
+                    It.IsAny< Expression<Func<BookBorrowingRequest, object?>>>()))
                 .ReturnsAsync(pagedResult);
 
             // Act
-            var result = await _requestService.GetBookBorrowingRequestsPaginatedAsync(pageIndex, pageSize);
+            var result = await _requestService.GetBorrowingRequestsPaginatedAsync(pageIndex, pageSize);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
-            Assert.That(result.PageSize, Is.EqualTo(pageSize));
-            Assert.That(result.Items?.Count(), Is.EqualTo(2));
-            Assert.That(result.Items.ElementAt(0).Status, Is.EqualTo(RequestStatus.Waiting));
+            // Assert           
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
+                Assert.That(result.PageSize, Is.EqualTo(pageSize));
+                Assert.That(result.Items.Count(), Is.EqualTo(2));
+                Assert.That(result.Items.ElementAt(0).Status, Is.EqualTo(RequestStatus.Waiting));
+            });
         }
 
         #endregion
@@ -235,12 +241,15 @@ namespace LibraryManagement.Application.Tests.Services
                 .ReturnsAsync(request);
 
             // Act
-            var result = await _requestService.GetBookBorrowingRequestByIdAsync(requestId);
+            var result = await _requestService.GetBorrowingRequestByIdAsync(requestId);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(requestId));
-            Assert.That(result.Status, Is.EqualTo(RequestStatus.Waiting));
+            // Assert           
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Id, Is.EqualTo(requestId));
+                Assert.That(result.Status, Is.EqualTo(RequestStatus.Waiting));
+            });
         }
 
         [Test]
@@ -253,7 +262,7 @@ namespace LibraryManagement.Application.Tests.Services
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<NotFoundException>(() =>
-                _requestService.GetBookBorrowingRequestByIdAsync(requestId));
+                _requestService.GetBorrowingRequestByIdAsync(requestId));
             Assert.That(ex.Message, Is.EqualTo($"Book borrowing request with ID {requestId} not found."));
         }
 
@@ -279,11 +288,14 @@ namespace LibraryManagement.Application.Tests.Services
                 .ReturnsAsync(requests);
 
             // Act
-            var result = await _requestService.GetBookBorrowingRequestsThisMonthAsync(requestorId);
+            var result = await _requestService.GetBorrowingRequestsThisMonthAsync(requestorId);
 
             // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count(), Is.EqualTo(2));
+            });
         }
 
         #endregion
@@ -314,11 +326,14 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _requestService.GetBorrowingRequestsByRequestorId(pageIndex, pageSize, requestorId);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
-            Assert.That(result.PageSize, Is.EqualTo(pageSize));
-            Assert.That(result.Items?.Count(), Is.EqualTo(2));
+            // Assert           
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
+                Assert.That(result.PageSize, Is.EqualTo(pageSize));
+                Assert.That(result.Items.Count(), Is.EqualTo(2));
+            });
         }
 
         #endregion
@@ -341,13 +356,16 @@ namespace LibraryManagement.Application.Tests.Services
                 .ReturnsAsync((BookBorrowingRequest r) => r);
 
             // Act
-            var result = await _requestService.UpdateBookBorrowingRequestAsync(
+            var result = await _requestService.UpdateBorrowingRequestAsync(
                 requestId, approverId, updateDto);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Status, Is.EqualTo(RequestStatus.Approved));
-            Assert.That(result.ApproverId, Is.EqualTo(approverId));
+            // Assert          
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Status, Is.EqualTo(RequestStatus.Approved));
+                Assert.That(result.ApproverId, Is.EqualTo(approverId));
+            });
             _mockRequestRepository.Verify(r => r.UpdateAsync(It.IsAny<BookBorrowingRequest>()), Times.Once);
         }
 
@@ -364,7 +382,7 @@ namespace LibraryManagement.Application.Tests.Services
 
             // Act & Assert
             var ex = Assert.ThrowsAsync<NotFoundException>(() =>
-                _requestService.UpdateBookBorrowingRequestAsync(requestId, approverId, updateDto));
+                _requestService.UpdateBorrowingRequestAsync(requestId, approverId, updateDto));
             Assert.That(ex.Message, Is.EqualTo($"Book borrowing request with ID {requestId} not found."));
         }
 

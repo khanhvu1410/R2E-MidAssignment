@@ -4,8 +4,8 @@ namespace LibraryManagement.Application.Common
 {
     public class LoginResponse
     {
-        public UserToReturnDTO? User {  get; set; }
+        public UserToReturnDTO User { get; set; } = default!;
 
-        public string? AccessToken { get; set; }
+        public string AccessToken { get; set; } = default!;
     }
 }

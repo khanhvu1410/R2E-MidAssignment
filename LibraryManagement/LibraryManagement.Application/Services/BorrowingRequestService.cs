@@ -10,28 +10,28 @@ using LibraryManagement.Domain.Interfaces;
 
 namespace LibraryManagement.Application.Services
 {
-    public class BookBorrowingRequestService : IBookBorrowingRequestService
+    public class BorrowingRequestService : IBorrowingRequestService
     {
-        private readonly IGenericRepository<BookBorrowingRequest> _bookBorrowingRequestRepository;
-        private readonly IGenericRepository<BookBorrowingRequestDetails> _bookBorrowingRequestDetailsRepository;
+        private readonly IGenericRepository<BookBorrowingRequest> _borrowingRequestRepository;
+        private readonly IGenericRepository<BookBorrowingRequestDetails> _requestDetailsRepository;
         private readonly IGenericRepository<Book> _bookRepository;
 
-        public BookBorrowingRequestService(IGenericRepository<BookBorrowingRequest> bookBorrowingRequestRepository, 
-            IGenericRepository<BookBorrowingRequestDetails> bookBorrowingRequestDetailsRepository,
+        public BorrowingRequestService(IGenericRepository<BookBorrowingRequest> borrowingRequestRepository, 
+            IGenericRepository<BookBorrowingRequestDetails> requestDetailsRepository,
             IGenericRepository<Book> bookRepository)
         {
-            _bookBorrowingRequestRepository = bookBorrowingRequestRepository;
-            _bookBorrowingRequestDetailsRepository = bookBorrowingRequestDetailsRepository;
+            _borrowingRequestRepository = borrowingRequestRepository;
+            _requestDetailsRepository = requestDetailsRepository;
             _bookRepository = bookRepository;
         }
 
-        public async Task<BorrowingRequestToReturnDTO> AddBookBorrowingRequestAsync(int requestorId, IEnumerable<RequestDetailsToAddDTO> requestDetailsDTOs)
+        public async Task<BorrowingRequestToReturnDTO> AddBorrowingRequestAsync(int requestorId, IEnumerable<RequestDetailsToAddDTO> requestDetailsDTOs)
         {
-            using var transaction = await _bookBorrowingRequestRepository.BeginTransactionAsync();
+            using var transaction = await _borrowingRequestRepository.BeginTransactionAsync();
             try
             {
                 // Limit up to 3 request per month
-                var filteredBorrowingRequests = await GetBookBorrowingRequestsThisMonthAsync(requestorId);
+                var filteredBorrowingRequests = await GetBorrowingRequestsThisMonthAsync(requestorId);
                 if (filteredBorrowingRequests.Count() >= 3)
                 {
                     throw new BadRequestException("Maximum 3 borrowing requests per month.");
@@ -71,7 +71,7 @@ namespace LibraryManagement.Application.Services
                     RequestedDate = DateTime.UtcNow,
                     Status = RequestStatus.Waiting
                 };
-                var addedBorrowingRequest = await _bookBorrowingRequestRepository.AddAsync(borrowingRequest);
+                var addedBorrowingRequest = await _borrowingRequestRepository.AddAsync(borrowingRequest);
 
                 // Process all request details
                 foreach (var requestDetailsDTO in requestDetailsDTOs)
@@ -86,7 +86,7 @@ namespace LibraryManagement.Application.Services
                     };
 
                     await _bookRepository.UpdateAsync(book);
-                    await _bookBorrowingRequestDetailsRepository.AddAsync(requestDetails);
+                    await _requestDetailsRepository.AddAsync(requestDetails);
                 }
 
                 await transaction.CommitAsync();
@@ -99,14 +99,14 @@ namespace LibraryManagement.Application.Services
             }     
         }
 
-        public async Task<PagedResponse<BorrowingRequestToReturnDTO>> GetBookBorrowingRequestsPaginatedAsync(int pageIndex, int pageSize)
+        public async Task<PagedResponse<BorrowingRequestToReturnDTO>> GetBorrowingRequestsPaginatedAsync(int pageIndex, int pageSize)
         {
-            var pagedResult = await _bookBorrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, null, br => br.Approver, br => br.Requestor);
+            var pagedResult = await _borrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, null, br => br.Approver, br => br.Requestor);
             var pagedResponse = new PagedResponse<BorrowingRequestToReturnDTO>
             {
                 Items = pagedResult.Items?
                     .Select(br => br.ToBookBorrowingRequestToReturnDTO())
-                    .ToList(),
+                    .ToList() ?? default!,
                 PageIndex = pagedResult.PageIndex,
                 PageSize = pagedResult.PageSize,
                 TotalRecords = pagedResult.TotalRecords,
@@ -117,9 +117,9 @@ namespace LibraryManagement.Application.Services
             return pagedResponse;
         }
 
-        public async Task<BorrowingRequestToReturnDTO> GetBookBorrowingRequestByIdAsync(int id)
+        public async Task<BorrowingRequestToReturnDTO> GetBorrowingRequestByIdAsync(int id)
         {
-            var bookBorrowingRequest = await _bookBorrowingRequestRepository.GetByIdAsync(id);
+            var bookBorrowingRequest = await _borrowingRequestRepository.GetByIdAsync(id);
             if (bookBorrowingRequest == null)
             {
                 throw new NotFoundException($"Book borrowing request with ID {id} not found.");
@@ -127,9 +127,9 @@ namespace LibraryManagement.Application.Services
             return bookBorrowingRequest.ToBookBorrowingRequestToReturnDTO();
         }
 
-        public async Task<IEnumerable<BorrowingRequestToReturnDTO>> GetBookBorrowingRequestsThisMonthAsync(int requestorId)
+        public async Task<IEnumerable<BorrowingRequestToReturnDTO>> GetBorrowingRequestsThisMonthAsync(int requestorId)
         {
-            var filteredBorrowingRequests = await _bookBorrowingRequestRepository.GetFiltersAsync(
+            var filteredBorrowingRequests = await _borrowingRequestRepository.GetFiltersAsync(
                 br => br.RequestorId == requestorId,
                 br => br.RequestedDate.Month == DateTime.UtcNow.Month,
                 br => br.RequestedDate.Year == DateTime.UtcNow.Year
@@ -139,10 +139,10 @@ namespace LibraryManagement.Application.Services
 
         public async Task<PagedResponse<BorrowingRequestToReturnDTO>> GetBorrowingRequestsByRequestorId(int pageIndex, int pageSize, int requestorId)
         {
-            var pagedResult = await _bookBorrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, br => br.RequestorId == requestorId);
+            var pagedResult = await _borrowingRequestRepository.GetPagedAsync(pageIndex, pageSize, br => br.RequestorId == requestorId);
             var pagedResponse = new PagedResponse<BorrowingRequestToReturnDTO>
             {
-                Items = pagedResult.Items?.Select(br => br.ToBookBorrowingRequestToReturnDTO()).ToList(),
+                Items = pagedResult.Items?.Select(br => br.ToBookBorrowingRequestToReturnDTO()).ToList() ?? default!,
                 PageIndex = pagedResult.PageIndex,
                 PageSize = pagedResult.PageSize,
                 TotalRecords = pagedResult.TotalRecords,
@@ -153,9 +153,9 @@ namespace LibraryManagement.Application.Services
             return pagedResponse;
         }
 
-        public async Task<BorrowingRequestToReturnDTO> UpdateBookBorrowingRequestAsync(int id, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
+        public async Task<BorrowingRequestToReturnDTO> UpdateBorrowingRequestAsync(int id, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
         {
-            var borrowingRequest = await _bookBorrowingRequestRepository.GetByIdAsync(id);
+            var borrowingRequest = await _borrowingRequestRepository.GetByIdAsync(id);
             if (borrowingRequest == null)
             {
                 throw new NotFoundException($"Book borrowing request with ID {id} not found.");
@@ -164,7 +164,7 @@ namespace LibraryManagement.Application.Services
             borrowingRequest.ApproverId = approverId;
             borrowingRequest.Status = borrowingRequestToUpdateDTO.Status;
 
-            var updatedBorrowingRequest = await _bookBorrowingRequestRepository.UpdateAsync(borrowingRequest);
+            var updatedBorrowingRequest = await _borrowingRequestRepository.UpdateAsync(borrowingRequest);
             return updatedBorrowingRequest.ToBookBorrowingRequestToReturnDTO();
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LibraryManagement.Persistence.Configurations
 {
-    internal class BookBorrowingRequestConfiguration : IEntityTypeConfiguration<BookBorrowingRequest>
+    internal class BorrowingRequestConfiguration : IEntityTypeConfiguration<BookBorrowingRequest>
     {
         public void Configure(EntityTypeBuilder<BookBorrowingRequest> builder)
         {

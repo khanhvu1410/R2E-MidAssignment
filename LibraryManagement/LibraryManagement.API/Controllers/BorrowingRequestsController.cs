@@ -11,29 +11,29 @@ namespace LibraryManagement.API.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    public class BookBorrowingRequestsController : ControllerBase
+    public class BorrowingRequestsController : ControllerBase
     {
-        private readonly IBookBorrowingRequestService _bookBorrowingRequestService;
+        private readonly IBorrowingRequestService _borrowingRequestService;
 
-        public BookBorrowingRequestsController(IBookBorrowingRequestService bookBorrowingRequestService)
+        public BorrowingRequestsController(IBorrowingRequestService borrowingRequestService)
         {
-            _bookBorrowingRequestService = bookBorrowingRequestService;
+            _borrowingRequestService = borrowingRequestService;
         }
 
         [HttpPost]
         [Authorize(Roles = "NormalUser")]
-        public async Task<ActionResult<BorrowingRequestToReturnDTO>> CreateBookBorrowingRequest(IEnumerable<RequestDetailsToAddDTO> bookBorrowingRequestDetailsDTOs)
+        public async Task<ActionResult<BorrowingRequestToReturnDTO>> CreateBorrowingRequest(IEnumerable<RequestDetailsToAddDTO> borrowingRequestDetailsDTOs)
         {
             var requestorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
-            var addedBookBorrowingRequest = await _bookBorrowingRequestService.AddBookBorrowingRequestAsync(requestorId, bookBorrowingRequestDetailsDTOs);
-            return CreatedAtAction(nameof(GetBookBorrowingRequestById), new { id = addedBookBorrowingRequest.Id }, addedBookBorrowingRequest);
+            var addedBorrowingRequest = await _borrowingRequestService.AddBorrowingRequestAsync(requestorId, borrowingRequestDetailsDTOs);
+            return CreatedAtAction(nameof(GetBookBorrowingRequestById), new { id = addedBorrowingRequest.Id }, addedBorrowingRequest);
         }
 
         [HttpGet]
         [Authorize(Roles = "SuperUser")]
-        public async Task<ActionResult<PagedResponse<BorrowingRequestToReturnDTO>>> GetBookBorrowingRequests(int pageIndex, int pageSize)
+        public async Task<ActionResult<PagedResponse<BorrowingRequestToReturnDTO>>> GetBorrowingRequests(int pageIndex, int pageSize)
         {
-            var pagedResponse = await _bookBorrowingRequestService.GetBookBorrowingRequestsPaginatedAsync(pageIndex, pageSize);
+            var pagedResponse = await _borrowingRequestService.GetBorrowingRequestsPaginatedAsync(pageIndex, pageSize);
             return Ok(pagedResponse);
         }
 
@@ -41,7 +41,7 @@ namespace LibraryManagement.API.Controllers
         [Authorize(Roles = "SuperUser")]
         public async Task<ActionResult<BorrowingRequestToReturnDTO>> GetBookBorrowingRequestById(int id)
         {
-            var bookBorrowingRequest = await _bookBorrowingRequestService.GetBookBorrowingRequestByIdAsync(id);
+            var bookBorrowingRequest = await _borrowingRequestService.GetBorrowingRequestByIdAsync(id);
             return Ok(bookBorrowingRequest);
         }
 
@@ -50,7 +50,7 @@ namespace LibraryManagement.API.Controllers
         public async Task<ActionResult<IEnumerable<BorrowingRequestToReturnDTO>>> GetBorrowingRequestsThisMonth()
         {
             var requestorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
-            var borrowingRequests = await _bookBorrowingRequestService.GetBookBorrowingRequestsThisMonthAsync(requestorId);
+            var borrowingRequests = await _borrowingRequestService.GetBorrowingRequestsThisMonthAsync(requestorId);
             return Ok(borrowingRequests);
         }
 
@@ -59,7 +59,7 @@ namespace LibraryManagement.API.Controllers
         public async Task<ActionResult<PagedResponse<BorrowingRequestToReturnDTO>>> GetBorrowingRequestsByRequestorId(int pageIndex, int pageSize)
         {
             var requestorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
-            var pagedResponse = await _bookBorrowingRequestService.GetBorrowingRequestsByRequestorId(pageIndex, pageSize, requestorId);
+            var pagedResponse = await _borrowingRequestService.GetBorrowingRequestsByRequestorId(pageIndex, pageSize, requestorId);
             return Ok(pagedResponse);
         }
 
@@ -68,7 +68,7 @@ namespace LibraryManagement.API.Controllers
         public async Task<ActionResult<BorrowingRequestToReturnDTO>> UpdateBookBorrowingRequest(int id, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
         {
             var approverId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty);
-            var updatedBorrowingRequest = await _bookBorrowingRequestService.UpdateBookBorrowingRequestAsync(id, approverId, borrowingRequestToUpdateDTO);
+            var updatedBorrowingRequest = await _borrowingRequestService.UpdateBorrowingRequestAsync(id, approverId, borrowingRequestToUpdateDTO);
             return Ok(updatedBorrowingRequest);
         }
     }

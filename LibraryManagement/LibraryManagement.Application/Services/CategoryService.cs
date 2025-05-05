@@ -67,7 +67,7 @@ namespace LibraryManagement.Application.Services
             var pagedResult = await _categoryRepository.GetPagedAsync(pageIndex, pageSize, null);
             var pagedResponse = new PagedResponse<CategoryToReturnDTO>
             {
-                Items = pagedResult.Items?.Select(c => c.ToCategoryToReturnDTO()).ToList(),
+                Items = pagedResult.Items?.Select(c => c.ToCategoryToReturnDTO()).ToList() ?? default!,
                 PageIndex = pagedResult.PageIndex,
                 PageSize = pagedResult.PageSize,
                 TotalRecords = pagedResult.TotalRecords,
@@ -101,7 +101,7 @@ namespace LibraryManagement.Application.Services
                 throw new NotFoundException($"Category with ID {id} not found.");
             }
 
-            category.Name = categoryToUpdateDTO.Name;
+            category.Name = categoryToUpdateDTO.Name!;
 
             var updatedCategory = await _categoryRepository.UpdateAsync(category);
             return updatedCategory.ToCategoryToReturnDTO();

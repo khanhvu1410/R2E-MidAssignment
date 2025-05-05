@@ -23,15 +23,15 @@ export const ENDPOINT_API = {
     update: '/categories/:id',
   },
   borrowingRequest: {
-    getPaged: '/bookBorrowingRequests?pageIndex=:pageIndex&pageSize=:pageSize',
-    create: '/bookBorrowingRequests',
-    getThisMonth: '/bookBorrowingRequests/thisMonth',
+    getPaged: '/borrowingRequests?pageIndex=:pageIndex&pageSize=:pageSize',
+    create: '/borrowingRequests',
+    getThisMonth: '/borrowingRequests/thisMonth',
     getByRequestorId:
-      '/bookBorrowingRequests/getByRequestorId?pageIndex=:pageIndex&pageSize=:pageSize',
-    getById: '/bookBorrowingRequests/:id',
-    update: '/bookBorrowingRequests/:id',
+      '/borrowingRequests/getByRequestorId?pageIndex=:pageIndex&pageSize=:pageSize',
+    getById: '/borrowingRequests/:id',
+    update: '/borrowingRequests/:id',
   },
   requestDetails: {
-    getByBorrowingRequestId: '/bookBorrowingRequestDetails/:borrowingRequestId',
+    getByBorrowingRequestId: '/requestDetails/:borrowingRequestId',
   },
 };
