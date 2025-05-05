@@ -6,13 +6,13 @@ namespace LibraryManagement.Domain.Entities
     {
         public int Id { get; set; }
 
-        public string? Username { get; set; }
+        public string Username { get; set; } = default!;
 
-        public required byte[] PasswordHash { get; set; }
+        public byte[] PasswordHash { get; set; } = default!;
         
-        public required byte[] PasswordSalt { get; set; }
+        public byte[] PasswordSalt { get; set; } = default!;
 
-        public UserRole Role { get; set; }
+        public UserRole Role { get; set; } = UserRole.NormalUser;
 
         public string? Email { get; set; }
 

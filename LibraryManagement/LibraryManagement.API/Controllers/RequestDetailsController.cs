@@ -8,19 +8,19 @@ namespace LibraryManagement.API.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    public class BookBorrowingRequestDetailsController : ControllerBase
+    public class RequestDetailsController : ControllerBase
     {
-        private readonly IBookBorrowingRequestDetailsService _bookBorrowingRequestDetailsService;
+        private readonly IRequestDetailsService _requestDetailsService;
 
-        public BookBorrowingRequestDetailsController(IBookBorrowingRequestDetailsService bookBorrowingRequestDetailsService) 
+        public RequestDetailsController(IRequestDetailsService requestDetailsService) 
         {
-            _bookBorrowingRequestDetailsService = bookBorrowingRequestDetailsService;
+            _requestDetailsService = requestDetailsService;
         }
 
         [HttpGet("{borrowingRequestId}")]
         public async Task<ActionResult<IEnumerable<RequestDetailsToReturnDTO>>> GetRequestDetailsByBorrowingRequestId(int borrowingRequestId)
         {
-            var requestDetails = await _bookBorrowingRequestDetailsService.GetRequestDetailsByBorrowingRequestId(borrowingRequestId);
+            var requestDetails = await _requestDetailsService.GetRequestDetailsByBorrowingRequestId(borrowingRequestId);
             return Ok(requestDetails);
         }
     }

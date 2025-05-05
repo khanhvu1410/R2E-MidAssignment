@@ -4,11 +4,11 @@
     {
         public int Id { get; set; }
 
-        public string? Title { get; set; }
+        public string Title { get; set; } = default!;
 
-        public string? Author { get; set; }
+        public string Author { get; set; } = default!;
 
-        public string? ISBN { get; set; }
+        public string ISBN { get; set; } = default!;
 
         public int PublicationYear { get; set; }
 
@@ -18,7 +18,7 @@
 
         public int CategoryId { get; set; }
 
-        public Category? Category { get; set; }
+        public Category Category { get; set; } = default!;
 
         public ICollection<BookBorrowingRequestDetails>? BookBorrowingRequestDetails { get; set; }
     }

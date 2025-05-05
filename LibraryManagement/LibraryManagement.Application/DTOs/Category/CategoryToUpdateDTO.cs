@@ -2,6 +2,6 @@
 {
     public class CategoryToUpdateDTO
     {
-        public string? Name { get; set; }
+        public string Name { get; set; } = default!;
     }
 }

@@ -52,7 +52,7 @@ namespace LibraryManagement.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? filter, params Expression<Func<T, object>>[] includes)
+        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize, Expression<Func<T, bool>>? filter, params Expression<Func<T, object?>>[] includes)
         {
             var query = _dbSet.AsQueryable();
 
@@ -96,7 +96,7 @@ namespace LibraryManagement.Persistence.Repositories
         }
 
         public async Task<T> UpdateAsync(T entity)
-        {
+        {          
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
             return entity;

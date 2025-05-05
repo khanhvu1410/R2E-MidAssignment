@@ -6,11 +6,11 @@ using LibraryManagement.Domain.Interfaces;
 
 namespace LibraryManagement.Application.Services
 {
-    public class BookBorrowingRequestDetailsService : IBookBorrowingRequestDetailsService
+    public class RequestDetailsService : IRequestDetailsService
     {
-        IGenericRepository<BookBorrowingRequestDetails> _requestDetailsRepository;
+        private readonly IGenericRepository<BookBorrowingRequestDetails> _requestDetailsRepository;
 
-        public BookBorrowingRequestDetailsService(IGenericRepository<BookBorrowingRequestDetails> requestDetailsRepository)
+        public RequestDetailsService(IGenericRepository<BookBorrowingRequestDetails> requestDetailsRepository)
         {
             _requestDetailsRepository = requestDetailsRepository;
         }
@@ -22,7 +22,7 @@ namespace LibraryManagement.Application.Services
                 .Where(rd => rd.BookBorrowingRequestId == borrowingRequestId)
                 .Select(rd => new RequestDetailsToReturnDTO
                 {
-                    Book = rd.Book?.ToBookToReturnDTO()
+                    Book = rd.Book?.ToBookToReturnDTO() ?? default!
                 });
         }
     }

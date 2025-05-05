@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Persistence.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    [Migration("20250501053328_InitialCreate")]
+    [Migration("20250505082455_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -34,6 +34,7 @@ namespace LibraryManagement.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Author")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -44,6 +45,7 @@ namespace LibraryManagement.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ISBN")
+                        .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
@@ -174,6 +176,116 @@ namespace LibraryManagement.Persistence.Migrations
                             PublicationYear = 1957,
                             Quantity = 10,
                             Title = "The Cat in the Hat"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Author = "F. Scott Fitzgerald",
+                            CategoryId = 1,
+                            Description = "A portrait of the Jazz Age through the tragic story of the mysterious millionaire Jay Gatsby and his love for Daisy Buchanan.",
+                            ISBN = "9780743273565",
+                            PublicationYear = 1925,
+                            Quantity = 8,
+                            Title = "The Great Gatsby"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Author = "Frank Herbert",
+                            CategoryId = 1,
+                            Description = "A science fiction epic about politics, religion, and power on the desert planet Arrakis, home to the valuable spice melange.",
+                            ISBN = "9780441172719",
+                            PublicationYear = 1965,
+                            Quantity = 7,
+                            Title = "Dune"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Author = "Carl Sagan",
+                            CategoryId = 2,
+                            Description = "A journey through the universe exploring astronomy, biology, and the history of science, connecting humanity to the cosmos.",
+                            ISBN = "9780345539434",
+                            PublicationYear = 1980,
+                            Quantity = 6,
+                            Title = "Cosmos"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Author = "Siddhartha Mukherjee",
+                            CategoryId = 2,
+                            Description = "A comprehensive history of genetics, from its discovery to modern breakthroughs and ethical dilemmas.",
+                            ISBN = "9781476733500",
+                            PublicationYear = 2016,
+                            Quantity = 5,
+                            Title = "The Gene: An Intimate History"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Author = "Yuval Noah Harari",
+                            CategoryId = 3,
+                            Description = "Explores the history of Homo sapiens from the Stone Age to the 21st century, examining key revolutions in human development.",
+                            ISBN = "9780062316097",
+                            PublicationYear = 2011,
+                            Quantity = 9,
+                            Title = "Sapiens: A Brief History of Humankind"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Author = "Peter Frankopan",
+                            CategoryId = 3,
+                            Description = "Reinterprets world history with Asia and the Silk Road trade routes at the center of global exchange and power.",
+                            ISBN = "9781408839997",
+                            PublicationYear = 2015,
+                            Quantity = 4,
+                            Title = "The Silk Roads: A New History of the World"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Author = "Michelle Obama",
+                            CategoryId = 4,
+                            Description = "An intimate memoir by the former First Lady, chronicering her journey from Chicago's South Side to the White House.",
+                            ISBN = "9781524763138",
+                            PublicationYear = 2018,
+                            Quantity = 7,
+                            Title = "Becoming"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Author = "Tara Westover",
+                            CategoryId = 4,
+                            Description = "A memoir about a woman who leaves her survivalist family and goes on to earn a PhD from Cambridge University.",
+                            ISBN = "9780399590504",
+                            PublicationYear = 2018,
+                            Quantity = 6,
+                            Title = "Educated"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Author = "J.K. Rowling",
+                            CategoryId = 5,
+                            Description = "The first book in the Harry Potter series, following a young boy's discovery of his magical heritage at Hogwarts School.",
+                            ISBN = "9780590353427",
+                            PublicationYear = 1997,
+                            Quantity = 10,
+                            Title = "Harry Potter and the Sorcerer's Stone"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Author = "Maurice Sendak",
+                            CategoryId = 5,
+                            Description = "A classic picture book about Max's imaginative journey to the land of the Wild Things, where he becomes king.",
+                            ISBN = "9780060254926",
+                            PublicationYear = 1963,
+                            Quantity = 8,
+                            Title = "Where the Wild Things Are"
                         });
                 });
 

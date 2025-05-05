@@ -2,7 +2,7 @@
 {
     public class PagedResponse<T>
     {
-        public IEnumerable<T>? Items { get; set;  }
+        public IEnumerable<T> Items { get; set; } = default!;
 
         public int PageIndex { get; set;  }
 

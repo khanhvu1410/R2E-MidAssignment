@@ -4,6 +4,6 @@ namespace LibraryManagement.Application.DTOs.RequestDetails
 {
     public class RequestDetailsToReturnDTO
     {
-        public BookToReturnDTO? Book { get; set; }
+        public BookToReturnDTO Book { get; set; } = default!;
     }
 }

@@ -67,8 +67,8 @@ namespace LibraryManagement.API
 
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IBookBorrowingRequestService, BookBorrowingRequestService>();
-            builder.Services.AddScoped<IBookBorrowingRequestDetailsService, BookBorrowingRequestDetailsService>();
+            builder.Services.AddScoped<IBorrowingRequestService, BorrowingRequestService>();
+            builder.Services.AddScoped<IRequestDetailsService, RequestDetailsService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
 

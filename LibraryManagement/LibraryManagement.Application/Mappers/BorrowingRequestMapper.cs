@@ -3,7 +3,7 @@ using LibraryManagement.Domain.Entities;
 
 namespace LibraryManagement.Application.Mappers
 {
-    public static class BookBorrowingRequestMapper
+    public static class BorrowingRequestMapper
     {
         public static BorrowingRequestToReturnDTO ToBookBorrowingRequestToReturnDTO(this BookBorrowingRequest bookBorrowingRequest)
         {
@@ -13,7 +13,7 @@ namespace LibraryManagement.Application.Mappers
                 RequestorId = bookBorrowingRequest.RequestorId,
                 ApproverId = bookBorrowingRequest.ApproverId,
                 RequestorUsername = bookBorrowingRequest.Requestor?.Username,
-                ApproverUsername = bookBorrowingRequest.Approver?.Username,
+                ApproverUsername = bookBorrowingRequest.Approver?.Username ?? default!,
                 RequestedDate = bookBorrowingRequest.RequestedDate,
                 Status = bookBorrowingRequest.Status
             };

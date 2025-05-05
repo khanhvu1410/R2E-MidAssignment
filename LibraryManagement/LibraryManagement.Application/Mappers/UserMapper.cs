@@ -15,13 +15,13 @@ namespace LibraryManagement.Application.Mappers
             };
         }
 
-        public static User ToUser(this UserToRegisterDTO userToRegisterDTO, byte[] passwordHash, byte[] passwordSalt)
+        public static User ToUser(this UserToRegisterDTO userToRegisterDTO, byte[]? passwordHash, byte[]? passwordSalt)
         {
             return new User
             {
                 Username = userToRegisterDTO.Username,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
+                PasswordHash = passwordHash ?? default!,
+                PasswordSalt = passwordSalt ?? default!,
                 Role = userToRegisterDTO.Role,
                 Email = userToRegisterDTO.Email
             };

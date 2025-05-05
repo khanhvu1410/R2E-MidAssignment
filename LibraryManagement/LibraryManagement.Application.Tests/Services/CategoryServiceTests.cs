@@ -55,10 +55,13 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _categoryService.AddCategoryAsync(categoryToAdd);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(expectedCategory.Id));
-            Assert.That(result.Name, Is.EqualTo(expectedCategory.Name));
+            // Assert           
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Id, Is.EqualTo(expectedCategory.Id));
+                Assert.That(result.Name, Is.EqualTo(expectedCategory.Name));
+            });
             _mockCategoryToAddDTOValidator.Verify(v => v.ValidateAsync(categoryToAdd, default), Times.Once);
             _mockCategoryRepository.Verify(r => r.AddAsync(It.IsAny<Category>()), Times.Once);
         }
@@ -193,12 +196,15 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _categoryService.GetCategoriesPaginatedAsync(pageIndex, pageSize);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
-            Assert.That(result.PageSize, Is.EqualTo(pageSize));
-            Assert.That(result.Items?.Count(), Is.EqualTo(2));
-            Assert.That(result.Items.ElementAt(0).Name, Is.EqualTo("Fiction"));
+            // Assert          
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.PageIndex, Is.EqualTo(pageIndex));
+                Assert.That(result.PageSize, Is.EqualTo(pageSize));
+                Assert.That(result.Items.Count(), Is.EqualTo(2));
+                Assert.That(result.Items.ElementAt(0).Name, Is.EqualTo("Fiction"));
+            });
         }
 
         #endregion
@@ -218,10 +224,13 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _categoryService.GetCategoryByIdAsync(categoryId);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(categoryId));
-            Assert.That(result.Name, Is.EqualTo("Fiction"));
+            // Assert          
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Id, Is.EqualTo(categoryId));
+                Assert.That(result.Name, Is.EqualTo("Fiction"));
+            });
         }
 
         [Test]
@@ -262,10 +271,13 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _categoryService.UpdateCategoryAsync(categoryId, categoryToUpdate);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Id, Is.EqualTo(categoryId));
-            Assert.That(result.Name, Is.EqualTo("Updated Fiction"));
+            // Assert           
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Id, Is.EqualTo(categoryId));
+                Assert.That(result.Name, Is.EqualTo("Updated Fiction"));
+            });
             _mockCategoryToUpdateDTOValidator.Verify(v => v.ValidateAsync(categoryToUpdate, default), Times.Once);
             _mockCategoryRepository.Verify(r => r.UpdateAsync(It.IsAny<Category>()), Times.Once);
         }

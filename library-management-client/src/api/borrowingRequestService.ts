@@ -3,10 +3,13 @@ import { RequestDetailsToAdd } from '../models/requestDetails';
 import { ENDPOINT_API } from '../setup/config';
 import { httpClient } from '../setup/httpClient';
 
-export const createBorrowingRequestService = (
+export const createBorrowingRequestService = async (
   requestDetails: RequestDetailsToAdd[]
 ) => {
-  return httpClient.post(ENDPOINT_API.borrowingRequest.create, requestDetails);
+  return await httpClient.post(
+    ENDPOINT_API.borrowingRequest.create,
+    requestDetails
+  );
 };
 
 export const getPagedBorrowingRequestsService = (
@@ -20,8 +23,8 @@ export const getPagedBorrowingRequestsService = (
   );
 };
 
-export const getBorrowingRequestsThisMonthService = () => {
-  return httpClient.get(ENDPOINT_API.borrowingRequest.getThisMonth);
+export const getBorrowingRequestsThisMonthService = async () => {
+  return await httpClient.get(ENDPOINT_API.borrowingRequest.getThisMonth);
 };
 
 export const getBorrowingRequestsByRequestorId = (

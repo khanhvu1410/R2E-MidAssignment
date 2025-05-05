@@ -10,11 +10,11 @@ namespace LibraryManagement.Application.DTOs.BorrowingRequest
 
         public int? ApproverId { get; set; }
 
-        public string? RequestorUsername { get; set; }
+        public string RequestorUsername { get; set; } = default!;
 
-        public string? ApproverUsername { get; set; }
+        public string ApproverUsername { get; set; } = default!;
 
-        public DateTime RequestedDate { get; set; } 
+        public DateTime RequestedDate { get; set; }
 
         public RequestStatus Status { get; set; }
     }

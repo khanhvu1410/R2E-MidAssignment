@@ -7,16 +7,16 @@ using Moq;
 namespace LibraryManagement.Application.Tests.Services
 {
     [TestFixture]
-    internal class BookBorrowingRequestDetailsServiceTests
+    internal class RequestDetailsServiceTests
     {
         private Mock<IGenericRepository<BookBorrowingRequestDetails>> _mockRequestDetailsRepository;
-        private BookBorrowingRequestDetailsService _requestDetailsService;
+        private RequestDetailsService _requestDetailsService;
 
         [SetUp]
         public void Setup()
         {
             _mockRequestDetailsRepository = new Mock<IGenericRepository<BookBorrowingRequestDetails>>();
-            _requestDetailsService = new BookBorrowingRequestDetailsService(_mockRequestDetailsRepository.Object);
+            _requestDetailsService = new RequestDetailsService(_mockRequestDetailsRepository.Object);
         }
 
         [Test]
@@ -49,12 +49,15 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _requestDetailsService.GetRequestDetailsByBorrowingRequestId(borrowingRequestId);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(2));
-            Assert.That(result.Any(rd => rd.Book?.Title == "Book 1"), Is.True);
-            Assert.That(result.Any(rd => rd.Book?.Title == "Book 2"), Is.True);
-            Assert.That(result.Any(rd => rd.Book?.Title == "Book 3"), Is.False);
+            // Assert         
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count(), Is.EqualTo(2));
+                Assert.That(result.Any(rd => rd.Book?.Title == "Book 1"), Is.True);
+                Assert.That(result.Any(rd => rd.Book?.Title == "Book 2"), Is.True);
+                Assert.That(result.Any(rd => rd.Book?.Title == "Book 3"), Is.False);
+            });
         }
 
         [Test]
@@ -92,7 +95,6 @@ namespace LibraryManagement.Application.Tests.Services
                 new BookBorrowingRequestDetails
                 {
                     BookBorrowingRequestId = borrowingRequestId,
-                    Book = null
                 }
             };
 
@@ -102,10 +104,13 @@ namespace LibraryManagement.Application.Tests.Services
             // Act
             var result = await _requestDetailsService.GetRequestDetailsByBorrowingRequestId(borrowingRequestId);
 
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(1));
-            Assert.That(result.First().Book, Is.Null);
+            // Assert          
+            Assert.Multiple(() =>
+            {
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count(), Is.EqualTo(1));
+                Assert.That(result.First().Book, Is.Null);
+            });
         }
 
         [Test]

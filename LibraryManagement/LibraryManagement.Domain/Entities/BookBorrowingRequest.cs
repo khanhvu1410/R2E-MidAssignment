@@ -10,11 +10,11 @@ namespace LibraryManagement.Domain.Entities
 
         public int? ApproverId { get; set; }
 
-        public DateTime RequestedDate { get; set; }
+        public DateTime RequestedDate { get; set; } 
 
-        public RequestStatus Status { get; set; }
+        public RequestStatus Status { get; set; } = RequestStatus.Waiting;
 
-        public User? Requestor { get; set; }
+        public User Requestor { get; set; } = default!;
 
         public User? Approver { get; set; }
 

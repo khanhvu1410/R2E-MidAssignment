@@ -25,7 +25,7 @@ const Login = () => {
           navigate(PATH.user.books);
         }
       })
-      .catch(() => {
+      .catch((err) => {
         message.error('Login failed! The username or password is incorrect.');
       })
       .finally(() => {

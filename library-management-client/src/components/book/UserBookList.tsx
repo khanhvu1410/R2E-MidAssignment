@@ -24,6 +24,7 @@ import {
   getBorrowingRequestsThisMonthService,
 } from '../../api/borrowingRequestService';
 import { BorrowingRequest } from '../../models/borrowingRequest';
+import { ExecException } from 'node:child_process';
 
 const defaultQueryParameters = {
   pageIndex: 1,
@@ -128,9 +129,6 @@ const UserBookList = () => {
   const [bookQueryParameters, setBookQueryParameters] = useState(
     defaultQueryParameters
   );
-  const [borrowingRequest, setBorrowingRequests] = useState<BorrowingRequest[]>(
-    []
-  );
 
   useEffect(() => {
     let isSetData = true;
@@ -161,17 +159,6 @@ const UserBookList = () => {
         setIsLoading(false);
       });
 
-    setIsLoading(true);
-    getBorrowingRequestsThisMonthService()
-      .then((response) => {
-        setBorrowingRequests(response.data);
-      })
-      .catch((err) => {
-        message.error(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
     return () => {
       isSetData = false;
     };
@@ -195,7 +182,7 @@ const UserBookList = () => {
     });
   };
 
-  const handleBorrowBooks = () => {
+  const handleBorrowBooks = async () => {
     if (selectedBooks.length === 0) {
       message.warning('Please select at least one book to borrow');
       return;
@@ -206,29 +193,34 @@ const UserBookList = () => {
       return;
     }
 
-    if (borrowingRequest.length >= 3) {
-      message.warning('Maximum 3 borrowing requests per month');
-      return;
-    }
+    try {
+      setIsLoading(true);
+      const response = await getBorrowingRequestsThisMonthService();
 
-    setIsLoading(true);
-    const requestDetails = selectedBooks.map((id) => {
-      return {
-        bookId: id,
-      };
-    });
-
-    createBorrowingRequestService(requestDetails)
-      .then(() => {
-        message.success('Borrowing request created successfully');
+      if (response.data.length >= 3) {
+        message.warning('Maximum 3 borrowing requests per month');
         setSelectedBooks([]);
-      })
-      .catch((err) => {
-        message.error(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
+        return;
+      }
+
+      const requestDetails = selectedBooks.map((id) => {
+        return {
+          bookId: id,
+        };
       });
+
+      await createBorrowingRequestService(requestDetails);
+      message.success('Borrowing request created successfully!');
+      setSelectedBooks([]);
+    } catch (err) {
+      if (err instanceof Error) {
+        message.error(err.message);
+      } else {
+        message.error('An unknown error occured');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

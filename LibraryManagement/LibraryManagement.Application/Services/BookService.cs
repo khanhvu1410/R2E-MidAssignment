@@ -12,18 +12,18 @@ namespace LibraryManagement.Application.Services
     public class BookService : IBookService
     {
         private readonly IGenericRepository<Book> _bookRepository;
-        private readonly IGenericRepository<BookBorrowingRequestDetails> _bookBorrowingRequestDetails;
+        private readonly IGenericRepository<BookBorrowingRequestDetails> _requestDetailsRepository;
         private readonly IValidator<BookToAddDTO> _bookToAddDTOValidator;
         private readonly IValidator<BookToUpdateDTO> _bookToUpdateDTOValidator;
 
         public BookService(IGenericRepository<Book> bookRepository,
-            IGenericRepository<BookBorrowingRequestDetails> bookBorrowingRequestDetails,
+            IGenericRepository<BookBorrowingRequestDetails> requestDetailsRepository,
             IValidator<BookToAddDTO> bookToAddDTOvalidator, 
             IValidator<BookToUpdateDTO> bookToUpdateDTOValidator
         )
         {
             _bookRepository = bookRepository;
-            _bookBorrowingRequestDetails = bookBorrowingRequestDetails;
+            _requestDetailsRepository = requestDetailsRepository;
             _bookToAddDTOValidator = bookToAddDTOvalidator;
             _bookToUpdateDTOValidator = bookToUpdateDTOValidator;
         }
@@ -48,7 +48,7 @@ namespace LibraryManagement.Application.Services
             }
 
             // Check if this book is being borrowed
-            var requestDetailsExists = await _bookBorrowingRequestDetails.ExistsAsync(rd => rd.BookId == book.Id);
+            var requestDetailsExists = await _requestDetailsRepository.ExistsAsync(rd => rd.BookId == book.Id);
             if (requestDetailsExists)
             {
                 throw new BadRequestException($"Book with ID {id} cannot be deleted.");
@@ -62,7 +62,7 @@ namespace LibraryManagement.Application.Services
             var pagedResult = await _bookRepository.GetPagedAsync(pageIndex, pageSize, null, b => b.Category);
             var pagedResponse = new PagedResponse<BookToReturnDTO>
             {
-                Items = pagedResult.Items?.Select(b => b.ToBookToReturnDTO()).ToList(),
+                Items = pagedResult.Items.Select(b => b.ToBookToReturnDTO()).ToList(),
                 PageIndex = pagedResult.PageIndex,
                 PageSize = pagedResult.PageSize,
                 TotalRecords = pagedResult.TotalRecords,
