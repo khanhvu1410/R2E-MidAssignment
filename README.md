@@ -98,7 +98,8 @@ JWT_EXPIRY_MINUTES=120
 6. Run the backend:
 
 ```sh
-dotnet run --project LibraryManagement.API
+cd LibraryManagement.API
+dotnet run
 ```
 
 ### Frontend

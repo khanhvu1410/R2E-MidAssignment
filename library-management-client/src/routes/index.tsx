@@ -2,7 +2,6 @@ import { PATH } from '../constants/paths';
 import { UserRole } from '../models/auth';
 import CreateBook from '../components/book/CreateBook';
 import AdminBookList from '../components/book/AdminBookList';
-import Dashboard from '../components/dashboard/Dashboard';
 import ManageBook from '../pages/ManageBook';
 import EditBook from '../components/book/EditBook';
 import Login from '../pages/Login';
@@ -39,7 +38,6 @@ export const AppRoutes = [
       </PrivateRoute>
     ),
     children: [
-      { path: PATH.admin.dashboard, element: <Dashboard /> },
       { path: PATH.admin.books, element: <AdminBookList /> },
       { path: PATH.admin.bookDetails, element: <BookDetails /> },
       { path: PATH.admin.createBook, element: <CreateBook /> },

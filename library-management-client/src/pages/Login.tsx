@@ -20,7 +20,7 @@ const Login = () => {
         const { user, accessToken } = response.data;
         login(user, accessToken);
         if (user?.role === UserRole.SuperUser) {
-          navigate(PATH.admin.dashboard);
+          navigate(PATH.admin.books);
         } else if (user?.role === UserRole.NormalUser) {
           navigate(PATH.user.books);
         }

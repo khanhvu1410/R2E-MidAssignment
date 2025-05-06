@@ -1,5 +1,4 @@
 import {
-  AppstoreOutlined,
   BookOutlined,
   ShoppingCartOutlined,
   TagOutlined,
@@ -12,11 +11,6 @@ import { PATH } from '../../constants/paths';
 
 const AdminSideBar = () => {
   const menuItems: MenuProps['items'] = [
-    {
-      key: PATH.admin.dashboard,
-      label: 'Dashboard',
-      icon: AppstoreOutlined,
-    },
     {
       key: PATH.admin.books,
       label: 'Books',
