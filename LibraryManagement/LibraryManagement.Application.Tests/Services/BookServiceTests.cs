@@ -210,7 +210,7 @@ namespace LibraryManagement.Application.Tests.Services
                 Category = new Category { Id = 1, Name = "Fiction" }
             };
 
-            _mockBookRepository.Setup(r => r.GetByIdAsync(bookId, It.IsAny<Expression<Func<Book, object>>>()))
+            _mockBookRepository.Setup(r => r.GetByIdAsync(bookId, It.IsAny<Expression<Func<Book, object?>>>()))
                 .ReturnsAsync(book);
 
             // Act
@@ -231,7 +231,7 @@ namespace LibraryManagement.Application.Tests.Services
         {
             // Arrange
             var bookId = 999;
-            _mockBookRepository.Setup(r => r.GetByIdAsync(bookId, It.IsAny<Expression<Func<Book, object>>>()))
+            _mockBookRepository.Setup(r => r.GetByIdAsync(bookId, It.IsAny<Expression<Func<Book, object?>>>()))
                 .ReturnsAsync(null as Book);
 
             // Act & Assert

@@ -50,9 +50,9 @@ The Library Management System is a full-stack web application designed for manag
 ## Prerequisites
 
 - .NET 8.0 SDK
-- Visual Studio 2022 or Visual Studio Code
 - Node.js & npm
 - SQL Server
+- Visual Studio 2022 or Visual Studio Code
 
 ## How to run
 
@@ -65,7 +65,7 @@ git clone https://github.com/khanhvu1410/rookie-mid-assignment.git
 cd rookie-mid-assignment/LibraryManagement
 ```
 
-2. Update appsettings.json with your SQL Server connection:
+2. Update appsettings.json with your SQL Server connection in API project:
 
 ```json
 "ConnectionStrings": {
@@ -100,6 +100,12 @@ JWT_EXPIRY_MINUTES=120
 ```sh
 cd LibraryManagement.API
 dotnet run
+```
+
+7. Run unit tests:
+
+```sh
+dotnet test
 ```
 
 ### Frontend
