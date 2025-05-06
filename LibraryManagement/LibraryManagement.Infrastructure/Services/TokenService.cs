@@ -21,12 +21,12 @@ namespace LibraryManagement.Infrastructure.Services
         public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret ?? string.Empty);
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
 
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new(ClaimTypes.Name, user.Username ?? string.Empty),
+                new(ClaimTypes.Name, user.Username),
                 new(ClaimTypes.Role, user.Role.ToString())
             };
 
