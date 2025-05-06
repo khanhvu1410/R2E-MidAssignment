@@ -23,8 +23,6 @@ import {
   createBorrowingRequestService,
   getBorrowingRequestsThisMonthService,
 } from '../../api/borrowingRequestService';
-import { BorrowingRequest } from '../../models/borrowingRequest';
-import { ExecException } from 'node:child_process';
 
 const defaultQueryParameters = {
   pageIndex: 1,
@@ -195,9 +193,9 @@ const UserBookList = () => {
 
     try {
       setIsLoading(true);
-      const response = await getBorrowingRequestsThisMonthService();
+      const responseRequest = await getBorrowingRequestsThisMonthService();
 
-      if (response.data.length >= 3) {
+      if (responseRequest.data.length >= 3) {
         message.warning('Maximum 3 borrowing requests per month');
         setSelectedBooks([]);
         return;
@@ -212,6 +210,25 @@ const UserBookList = () => {
       await createBorrowingRequestService(requestDetails);
       message.success('Borrowing request created successfully!');
       setSelectedBooks([]);
+
+      const responseBook = await getPagedBooksService(
+        bookQueryParameters.pageIndex,
+        bookQueryParameters.pageSize
+      );
+
+      setBooks(
+        responseBook.data.items.map((book: Book) => {
+          return {
+            ...book,
+            key: book.id,
+          };
+        })
+      );
+
+      setBookQueryParameters((prev) => ({
+        ...prev,
+        totalCount: responseBook.data.totalRecords,
+      }));
     } catch (err) {
       if (err instanceof Error) {
         message.error(err.message);

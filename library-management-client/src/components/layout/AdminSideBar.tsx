@@ -19,12 +19,12 @@ const AdminSideBar = () => {
     },
     {
       key: PATH.admin.books,
-      label: 'Book Management',
+      label: 'Books',
       icon: BookOutlined,
     },
     {
       key: PATH.admin.categories,
-      label: 'Category Management',
+      label: 'Categories',
       icon: TagOutlined,
     },
     {
@@ -44,7 +44,7 @@ const AdminSideBar = () => {
   const navigate = useNavigate();
 
   return (
-    <Sider width={215} breakpoint="lg" collapsedWidth={0}>
+    <Sider width={200} breakpoint="lg" collapsedWidth={0}>
       <Menu
         mode="inline"
         items={menuItems}

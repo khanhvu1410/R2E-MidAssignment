@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Persistence.Migrations
 {
     [DbContext(typeof(LibraryManagementDbContext))]
-    [Migration("20250505082455_InitialCreate")]
+    [Migration("20250506070629_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -409,6 +409,17 @@ namespace LibraryManagement.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "admin123@gmail.com",
+                            PasswordHash = new byte[] { 171, 40, 165, 244, 212, 237, 52, 162, 70, 145, 87, 226, 103, 136, 14, 111, 35, 212, 33, 121, 19, 34, 4, 105, 131, 178, 55, 49, 147, 143, 26, 119, 36, 217, 39, 164, 140, 17, 42, 4, 48, 21, 199, 138, 216, 142, 232, 77, 18, 175, 134, 42, 210, 37, 60, 240, 203, 50, 6, 39, 169, 159, 165, 91 },
+                            PasswordSalt = new byte[] { 118, 236, 50, 219, 156, 74, 137, 101, 165, 96, 20, 194, 195, 129, 66, 27, 92, 241, 36, 6, 219, 211, 242, 128, 136, 248, 70, 94, 67, 215, 25, 138, 196, 17, 174, 161, 187, 123, 247, 76, 31, 255, 120, 113, 90, 208, 135, 7, 250, 194, 239, 15, 26, 245, 216, 75, 57, 56, 145, 133, 132, 73, 126, 179, 201, 63, 212, 17, 211, 18, 119, 202, 188, 239, 35, 153, 106, 255, 212, 171, 11, 236, 96, 196, 99, 251, 126, 243, 87, 37, 55, 47, 86, 156, 56, 229, 65, 173, 10, 131, 166, 120, 140, 7, 92, 65, 89, 32, 50, 39, 48, 150, 225, 199, 240, 2, 183, 105, 15, 117, 217, 20, 45, 120, 148, 27, 5, 113 },
+                            Role = 1,
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("LibraryManagement.Domain.Entities.Book", b =>
