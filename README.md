@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Library Management System is a full-stack web application designed for managing book inventories, user borrowing requests, and administrative tasks. It supports role-based access for Super Users (administrators) and Normal Users, along with secure authentication and authorization via JWT tokens.
+A full-stack web application for managing books, users, and borrowing transactions with role-based access control (Admin & User), secure JWT authentication, and an intuitive interface.
 
 ## Tech stack
 
