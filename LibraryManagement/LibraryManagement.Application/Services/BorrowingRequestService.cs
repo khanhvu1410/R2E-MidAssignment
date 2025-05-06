@@ -155,7 +155,7 @@ namespace LibraryManagement.Application.Services
 
         public async Task<BorrowingRequestToReturnDTO> UpdateBorrowingRequestAsync(int id, int approverId, BorrowingRequestToUpdateDTO borrowingRequestToUpdateDTO)
         {
-            var borrowingRequest = await _borrowingRequestRepository.GetByIdAsync(id, br => br.Requestor, br => br.Approver);
+            var borrowingRequest = await _borrowingRequestRepository.GetByIdAsync(id);
             if (borrowingRequest == null)
             {
                 throw new NotFoundException($"Book borrowing request with ID {id} not found.");

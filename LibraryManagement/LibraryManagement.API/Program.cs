@@ -25,6 +25,15 @@ namespace LibraryManagement.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Load .env file in development
+            if (builder.Environment.IsDevelopment())
+            {
+                DotNetEnv.Env.Load();
+            }
+
+            // Add environment variables to configuration
+            builder.Configuration.AddEnvironmentVariables();
+
             // Add services to the container.
             builder.Services.AddControllers();
             
@@ -84,19 +93,51 @@ namespace LibraryManagement.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("LibraryManagementDBConnection"));
             });
 
-            // Configure JWT settings from appsettings.json
-            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+            // Configure JWT settings
+            builder.Services.Configure<JwtSettings>(options =>
+            {
+                options.Secret = Environment.GetEnvironmentVariable("JWT_SECRET")
+                   ?? builder.Configuration["JwtSettings:Secret"]
+                   ?? throw new InvalidOperationException("JWT Secret is not configured");
 
-            // Add JWT Authentication
-            var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
-            var key = Encoding.ASCII.GetBytes(jwtSettings?.Secret ?? string.Empty);
-            
+                options.Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
+                   ?? builder.Configuration["JwtSettings:Issuer"]
+                   ?? throw new InvalidOperationException("JWT Issuer is not configured");
+
+                options.Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+                   ?? builder.Configuration["JwtSettings:Audience"]
+                   ?? throw new InvalidOperationException("JWT Audience is not configured");
+
+                options.ExpiryMinutes = int.TryParse(Environment.GetEnvironmentVariable("JWT_EXPIRY_MINUTES"), out var expiry) 
+                    ? expiry 
+                    : builder.Configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 120);
+            });
+
+            // Add JWT Authentication     
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;    
             }).AddJwtBearer(options =>
             {
+                var jwtSettings = new JwtSettings
+                {
+                    Secret = Environment.GetEnvironmentVariable("JWT_SECRET")
+                        ?? builder.Configuration["JwtSettings:Secret"]
+                        ?? default!,
+                    Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
+                        ?? builder.Configuration["JwtSettings:Issuer"]
+                        ?? default!,
+                    Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
+                        ?? builder.Configuration["JwtSettings:Audience"]
+                        ?? default!,
+                    ExpiryMinutes = int.TryParse(Environment.GetEnvironmentVariable("JWT_EXPIRY_MINUTES"), out var expiry)
+                        ? expiry
+                        : builder.Configuration.GetValue<int>("JwtSettings:ExpiryMinutes", 120)
+                };
+                
+                var key = Encoding.ASCII.GetBytes(jwtSettings?.Secret ?? default!);
+                
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
