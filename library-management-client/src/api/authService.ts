@@ -1,4 +1,4 @@
-import { LoginCredentials, RegisterData, User, UserRole } from '../models/auth';
+import { LoginCredentials, RegisterData, UserRole } from '../models/auth';
 import { ENDPOINT_API } from '../setup/config';
 import { httpClient } from '../setup/httpClient';
 

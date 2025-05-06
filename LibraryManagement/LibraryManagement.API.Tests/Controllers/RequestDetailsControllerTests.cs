@@ -3,7 +3,6 @@ using LibraryManagement.API.Controllers;
 using LibraryManagement.Application.DTOs.Book;
 using LibraryManagement.Application.DTOs.RequestDetails;
 using LibraryManagement.Application.Interfaces;
-using LibraryManagement.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

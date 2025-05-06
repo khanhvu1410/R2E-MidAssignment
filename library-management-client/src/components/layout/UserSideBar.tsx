@@ -14,7 +14,7 @@ const UserSideBar = () => {
     },
     {
       key: PATH.user.borrowingRequests,
-      label: 'Borrowing Requests',
+      label: 'My Borrowings',
       icon: ShoppingCartOutlined,
     },
   ].map((item) => {

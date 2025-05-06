@@ -1,10 +1,8 @@
-﻿using System.Security.Claims;
-using LibraryManagement.API.Controllers;
+﻿using LibraryManagement.API.Controllers;
 using LibraryManagement.Application.Common;
 using LibraryManagement.Application.DTOs.Book;
 using LibraryManagement.Application.Interfaces;
 using LibraryManagement.Domain.Exceptions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 

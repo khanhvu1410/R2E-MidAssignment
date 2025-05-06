@@ -2,8 +2,11 @@ import { Book } from '../models/book';
 import { ENDPOINT_API } from '../setup/config';
 import { httpClient } from '../setup/httpClient';
 
-export const getPagedBooksService = (pageIndex: number, pageSize: number) => {
-  return httpClient.get(
+export const getPagedBooksService = async (
+  pageIndex: number,
+  pageSize: number
+) => {
+  return await httpClient.get(
     ENDPOINT_API.book.getPaged
       .replace(':pageIndex', pageIndex.toString())
       .replace(':pageSize', pageSize.toString())

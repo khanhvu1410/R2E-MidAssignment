@@ -18,6 +18,7 @@ namespace LibraryManagement.Persistence
             // Seed data
             CategorySeeder.Seed(modelBuilder);
             BookSeeder.Seed(modelBuilder);
+            UserSeeder.Seed(modelBuilder);
         }
 
         public DbSet<User> Users {  get; set; }
