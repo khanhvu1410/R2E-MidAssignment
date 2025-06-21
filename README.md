@@ -6,7 +6,7 @@ A full-stack web application for managing books, users, and borrowing transactio
 
 ## Tech stack
 
-- Backend: ASP.NET Core WebAPI
+- Backend: ASP.NET Core Web API
 - Frontend: React
 - Authentication: Token-based (JWT)
 - Database: SQL Server
